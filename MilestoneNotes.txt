@@ -1,0 +1,27 @@
+Adrian Tesdal
+Milestone 1 version 1.00 12.10.2017
+--------------------------------
+
+New Functionality
+-----------------
+- Added speed control w/ left and right mouse buttons
+- Can clear screen to colour
+- Can set square shapes of pixels to any colour
+- Can select any winow size
+
+Code Additions
+--------------
+- Two major functions, clear screen to colour and find pixel(s)
+- Heap array for stars
+- No detected memory leaks
+
+Tests
+-----
+- Tested with 100 000 000 on 800x600 stars for about 6 minutes without anything crashing
+- Tested with 800x600 and 1920x1080 with 10 000 stars, and FPS remains within reason and still no crashes
+- Gives reasonable impression of 3D space
+
+Notes
+-----
+- Separate code into functions for modularity.
+- Better variable/function names.
