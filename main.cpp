@@ -19,7 +19,7 @@
 */
 // Include the HAPI header to get access to all of HAPIs interfaces
 #include <HAPI_lib.h>
-#include <vector>
+#include "Graphics.h"
 // HAPI itself is wrapped in the HAPISPACE namespace
 using namespace HAPISPACE;
 
@@ -37,7 +37,7 @@ void Render_Stars(Star *sArr, int size, int width, int height, float speedScale,
 
 void HAPI_Main()
 {
-	const int size{ 10 }; //Amount of stars
+	const int size{ 10000 }; //Amount of stars
 	int width{ 1920 }; //Window width
 	int height{ 1080 }; //Window height
 	const HAPI_TMouseData &mData = HAPI.GetMouseData(); //HAPI mouse data
@@ -55,10 +55,15 @@ void HAPI_Main()
 
 	BYTE *screen = HAPI.GetScreenPointer();
 
+	Graphics g(width, height, screen);
+
 	HAPI.SetShowFPS(true);
 
 	while (HAPI.Update()) {
-		if (mData.leftButtonDown) {
+
+		g.Draw_Pixel(1000, 1000, 100);
+
+		/*if (mData.leftButtonDown) {
 			speed += 0.1f;
 		}
 		else if (mData.rightButtonDown) {
@@ -67,7 +72,7 @@ void HAPI_Main()
 
 		Clear_to_colour(screen, width, height, 0, 0, 0);
 		Render_Stars(starArray, size, width, height, speed, screen);
-		
+		*/
 	}
 	delete[] starArray;
 }
@@ -190,7 +195,7 @@ void Render_Stars(Star *sArr, int size, int width, int height, float speedScale,
 
 		// Scales size based on distance
 		mod = sArr[i].Z / 800;
-		sizeScale = 5 * (1 - mod);
+		sizeScale = 3 * (1 - mod);
 		scaledSize = 2 * sizeScale;
 
 		// Colours pixels using info from above calculations
