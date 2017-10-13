@@ -19,7 +19,7 @@
 */
 // Include the HAPI header to get access to all of HAPIs interfaces
 #include <HAPI_lib.h>
-#include "Graphics.h"
+#include "classes\graphics\Graphics.h"
 // HAPI itself is wrapped in the HAPISPACE namespace
 using namespace HAPISPACE;
 
@@ -38,14 +38,14 @@ void Render_Stars(Star *sArr, int size, int width, int height, float speedScale,
 void HAPI_Main()
 {
 	const int size{ 10000 }; //Amount of stars
-	int width{ 1920 }; //Window width
-	int height{ 1080 }; //Window height
+	int width{ 800 }; //Window width
+	int height{ 600 }; //Window height
 	const HAPI_TMouseData &mData = HAPI.GetMouseData(); //HAPI mouse data
 	if (size < 0) { return; } //Exits if there are no stars
-	Star *starArray = new Star[size]; //Creates heap array of star structs, delete at the end of main
+	//Star *starArray = new Star[size]; //Creates heap array of star structs, delete at the end of main
 	float speed = 0.1f; //Speed modifier
 
-	Init_Stars(starArray, size, width, height);
+	//Init_Stars(starArray, size, width, height);
 	
 	HAPI.ChangeFont("Arial");
 
@@ -59,10 +59,15 @@ void HAPI_Main()
 
 	HAPI.SetShowFPS(true);
 
+	HAPI_TColour col = HAPI_TColour(200, 0, 0);
+
 	while (HAPI.Update()) {
 
-		g.Draw_Pixel(1000, 1000, 100);
+		g.Draw_Pixel(50, 50, col);
 
+		//Clear_to_colour(screen, 800, 600, 200, 0, 0);
+
+		//g.Clear_Screen(100);
 		/*if (mData.leftButtonDown) {
 			speed += 0.1f;
 		}
@@ -74,7 +79,7 @@ void HAPI_Main()
 		Render_Stars(starArray, size, width, height, speed, screen);
 		*/
 	}
-	delete[] starArray;
+	//delete[] starArray;
 }
 
 void Find_Pixels(int width, int height, int orgWidth, int orgHeight, int posX, int posY, BYTE *screenptr, int R, int G, int B)
