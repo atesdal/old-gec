@@ -19,5 +19,5 @@ class Graphics
 
 	private:
 		int wWidth, wHeight;
-		BYTE *scrPntr, *startOfScreen;
+		BYTE *startOfScreen;
 };

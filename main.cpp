@@ -63,7 +63,7 @@ void HAPI_Main()
 
 	while (HAPI.Update()) {
 
-		g.Draw_Pixel(50, 50, col);
+		g.Clear_Screen(200, 0, 0);
 
 		//Clear_to_colour(screen, 800, 600, 200, 0, 0);
 
@@ -204,6 +204,6 @@ void Render_Stars(Star *sArr, int size, int width, int height, float speedScale,
 		scaledSize = 2 * sizeScale;
 
 		// Colours pixels using info from above calculations
-		Find_Pixels(scaledSize, scaledSize, width, height, Sx, Sy, scrPntr, 255, 0, 0);
+		//Find_Pixels(scaledSize, scaledSize, width, height, Sx, Sy, scrPntr, 255, 0, 0);
 	}
 }

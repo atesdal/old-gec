@@ -4,7 +4,6 @@ Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer)
 {
 	wWidth = windowWidth;
 	wHeight = windowHeight;
-	scrPntr = screenPointer;
 	startOfScreen = screenPointer;
 }
 
@@ -14,29 +13,30 @@ Graphics::~Graphics()
 
 void Graphics::Clear_Screen(int grayScale)
 {
-	memset(scrPntr, grayScale, (wWidth * wHeight * 4));
+	memset(startOfScreen, grayScale, (wWidth * wHeight * 4));
 }
 
 void Graphics::Clear_Screen(int r, int g, int b)
 {
+	BYTE *scrPntr = startOfScreen;
 	HAPI_TColour col = HAPI_TColour(r, g, b, 0);
 	for (int i{ 0 }; i < (wWidth * wHeight); i++) {
 		memcpy(scrPntr, &col, sizeof(HAPI_TColour));
 		scrPntr += sizeof(HAPI_TColour);
 	}
-	scrPntr = startOfScreen;
 }
 
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
 {
 	if (shapeWidth > wWidth || shapeHeight > wHeight) { return false; }
 	
+	BYTE *scrPntr = startOfScreen;
+
 	int endIncrement = wWidth * 4;
 	for (int h{ 0 }; h < shapeHeight; h++) {
 		memset(scrPntr, grayScale, (sizeof(HAPI_TColour) * shapeWidth));
 		scrPntr += endIncrement;
 	}
-	scrPntr = startOfScreen;
 	return true;
 }
 
@@ -48,13 +48,13 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, i
 	int endIncrement = wWidth * 4;
 	int startByte = (posX + (posY * wWidth)) * 4;
 
+	BYTE *scrPntr = startOfScreen;
 	scrPntr += startByte; //Sets screen pointer to original writing position
 
 	for (int h{ startByte }; h < (wWidth * shapeHeight * 4) + startByte; h += endIncrement) {
 		memset(scrPntr, grayScale, (sizeof(HAPI_TColour) * shapeWidth));
 		scrPntr += endIncrement;
 	}
-	scrPntr = startOfScreen;
 	return true;
 }
 
@@ -62,6 +62,7 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeCol
 {
 	if (shapeWidth > wWidth || shapeHeight > wHeight) { return false; }
 
+	BYTE *scrPntr = startOfScreen;
 	int endIncrement = (wWidth - (shapeWidth - 1)) * 4;
 
 	for (int h{ 1 }; h <= (shapeHeight * shapeWidth); h++) {
@@ -74,7 +75,6 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeCol
 			scrPntr += sizeof(HAPI_TColour);
 		}
 	}
-	scrPntr = startOfScreen;
 	return true;
 }
 
@@ -83,11 +83,12 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, H
 {
 	if ((shapeWidth + posX) > wWidth || posX < 0) { return false; } //Checks that pixels can be drawn in X-direction
 	else if ((shapeHeight + posY) > wHeight || posY < 0) { return false; } // and Y-direction
-
+	
 	int endIncrement = (wWidth - (shapeWidth - 1)) * 4;
 
 	int startByte = (posX + (posY * wWidth)) * 4;
 
+	BYTE *scrPntr = startOfScreen;
 	scrPntr += startByte; //Sets screen pointer to original writing position
 
 	for (int h{ startByte }; h < (shapeHeight * shapeWidth) + startByte; h++) {
@@ -99,6 +100,5 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, H
 			scrPntr += sizeof(HAPI_TColour);
 		}
 	}
-	scrPntr = startOfScreen;
 	return true;
 }
