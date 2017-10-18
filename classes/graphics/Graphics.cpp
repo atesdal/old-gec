@@ -102,3 +102,9 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, H
 	}
 	return true;
 }
+
+bool Graphics::Create_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height)
+{
+	Sprite *a = new Sprite(width, height, fileName);
+	return false;
+}
