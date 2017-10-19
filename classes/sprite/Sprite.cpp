@@ -1,15 +1,15 @@
 #include "Sprite.h"
 
-Sprite::Sprite(int textureWidth, int textureHeight, const std::string filePath)
+Sprite::Sprite(int textureWidth, int textureHeight)
 {
 	tWidth = textureWidth;
 	tHeight = textureHeight;
-	path = filePath;
+	tPntr =  nullptr;
 }
 
 Sprite::~Sprite()
 {
-
+	delete tPntr;
 }
 
 

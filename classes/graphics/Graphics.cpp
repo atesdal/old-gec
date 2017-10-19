@@ -9,6 +9,7 @@ Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer)
 
 Graphics::~Graphics()
 {
+	// SORT OUT DELETE FOR SPRITES
 }
 
 void Graphics::Clear_Screen(int grayScale)
@@ -29,7 +30,7 @@ void Graphics::Clear_Screen(int r, int g, int b)
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
 {
 	if (shapeWidth > wWidth || shapeHeight > wHeight) { return false; }
-	
+
 	BYTE *scrPntr = startOfScreen;
 
 	int endIncrement = wWidth * 4;
@@ -83,7 +84,7 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, H
 {
 	if ((shapeWidth + posX) > wWidth || posX < 0) { return false; } //Checks that pixels can be drawn in X-direction
 	else if ((shapeHeight + posY) > wHeight || posY < 0) { return false; } // and Y-direction
-	
+
 	int endIncrement = (wWidth - (shapeWidth - 1)) * 4;
 
 	int startByte = (posX + (posY * wWidth)) * 4;
@@ -105,6 +106,20 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, H
 
 bool Graphics::Create_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height)
 {
-	Sprite *a = new Sprite(width, height, fileName);
+	if (spriteMap.find(uniqueName) != spriteMap.end()) {
+		Sprite *a = new Sprite(width, height);
+		HAPI.LoadTexture(fileName, &a->Get_tPntr, width, height);
+		spriteMap[uniqueName] = a;
+		return true;
+	}
 	return false;
+}
+
+bool Graphics::Draw_Sprite(const std::string &spriteName)
+{
+	if (spriteMap.find(spriteName) == spriteMap.end()) {
+		return false;
+	}
+
+	return true;
 }
