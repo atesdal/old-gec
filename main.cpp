@@ -37,16 +37,10 @@ void Render_Stars(Star *sArr, int size, int width, int height, float speedScale,
 
 void HAPI_Main()
 {
-	const int size{ 10000 }; //Amount of stars
-	int width{ 800 }; //Window width
-	int height{ 600 }; //Window height
+	int width{ 1920 }; //Window width
+	int height{ 1080 }; //Window height
 	const HAPI_TMouseData &mData = HAPI.GetMouseData(); //HAPI mouse data
-	if (size < 0) { return; } //Exits if there are no stars
-	//Star *starArray = new Star[size]; //Creates heap array of star structs, delete at the end of main
-	float speed = 0.1f; //Speed modifier
 
-	//Init_Stars(starArray, size, width, height);
-	
 	HAPI.ChangeFont("Arial");
 
 	if (!HAPI.Initialise(width, height, "Feeling happi")) {
@@ -57,29 +51,18 @@ void HAPI_Main()
 
 	Graphics g(width, height, screen);
 
-	HAPI.SetShowFPS(true);
+	//g.Create_Sprite("Data\\alphaThing.tga", "playerSprite", 64, 64);
 
-	HAPI_TColour col = HAPI_TColour(200, 0, 0);
+	HAPI.SetShowFPS(true);
 
 	while (HAPI.Update()) {
 
-		g.Clear_Screen(200, 0, 0);
-
-		//Clear_to_colour(screen, 800, 600, 200, 0, 0);
-
-		//g.Clear_Screen(100);
-		/*if (mData.leftButtonDown) {
-			speed += 0.1f;
-		}
-		else if (mData.rightButtonDown) {
-			speed -= 0.1f;
-		}
-
-		Clear_to_colour(screen, width, height, 0, 0, 0);
-		Render_Stars(starArray, size, width, height, speed, screen);
-		*/
+		g.Clear_Screen(0);
+		//g.Draw_Sprite("playerSprite");
+		/*if (!g.Draw_Sprite("background")) {
+			std::cout << "Draw fail" << std::endl;
+		}*/
 	}
-	//delete[] starArray;
 }
 
 void Find_Pixels(int width, int height, int orgWidth, int orgHeight, int posX, int posY, BYTE *screenptr, int R, int G, int B)
