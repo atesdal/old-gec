@@ -51,20 +51,28 @@ void HAPI_Main()
 
 	Graphics g(width, height, screen);
 
-	g.Create_Sprite("Data\\alphaThing.tga", "playerSprite", 64, 64);
+	if (!g.Create_Sprite("Data\\alphaThing.tga", "playerSprite", 64, 64)) {
+		HAPI.UserMessage("Sprite loading failed", "Error");
+		return;
+	}
 
 	HAPI.SetShowFPS(true);
 
 	while (HAPI.Update()) {
 
-		g.Clear_Screen(0);
+		g.Clear_Screen(0, 0, 0);
+		
 		for (int i{ 0 }; i < 1000; i++) {
-			g.Draw_Sprite("playerSprite");
+			if (!g.Draw_Sprite("playerSprite", 300, 300)) {
+				HAPI.UserMessage("Sprite drawing failed", "Error");
+				return;
+			}
 		}
 		/*if (!g.Draw_Sprite("background")) {
 			std::cout << "Draw fail" << std::endl;
 		}*/
 	}
+	return;
 }
 
 void Find_Pixels(int width, int height, int orgWidth, int orgHeight, int posX, int posY, BYTE *screenptr, int R, int G, int B)

@@ -1,15 +1,16 @@
 #include "Graphics.h"
 
-Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer)
+Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer) : 
+	wWidth(windowWidth), wHeight(windowHeight), startOfScreen(screenPointer)
 {
-	wWidth = windowWidth;
-	wHeight = windowHeight;
-	startOfScreen = screenPointer;
+
 }
 
 Graphics::~Graphics()
 {
-	// SORT OUT DELETE FOR SPRITES
+	for (auto p : spriteMap) {
+		delete p.second;
+	}
 }
 
 void Graphics::Clear_Screen(int grayScale)
@@ -20,10 +21,18 @@ void Graphics::Clear_Screen(int grayScale)
 void Graphics::Clear_Screen(int r, int g, int b)
 {
 	BYTE *scrPntr = startOfScreen;
-	HAPI_TColour col = HAPI_TColour(r, g, b, 0);
+	/*HAPI_TColour col = HAPI_TColour(r, g, b, 0);
 	for (int i{ 0 }; i < (wWidth * wHeight); i++) {
 		memcpy(scrPntr, &col, sizeof(HAPI_TColour));
 		scrPntr += sizeof(HAPI_TColour);
+	}*/
+	for (int h{ 0 }; h < wHeight; h++) {
+		for (int w{ 0 }; w < wWidth; w++) {
+			scrPntr[0] = r;
+			scrPntr[1] = g;
+			scrPntr[2] = b;
+			scrPntr += sizeof(BYTE) * 4;
+		}
 	}
 }
 
@@ -118,11 +127,11 @@ bool Graphics::Create_Sprite(const std::string &fileName, const std::string &uni
 	return false;
 }
 
-bool Graphics::Draw_Sprite(const std::string &spriteName) const
+bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY) const
 {
 	if (spriteMap.find(spriteName) == spriteMap.end()) {
 		return false;
 	}
-	spriteMap.at(spriteName)->Draw_Texture(startOfScreen, wWidth);
+	spriteMap.at(spriteName)->Alpha_Blit(startOfScreen, wWidth, posX, posY);
 	return true;
 }
