@@ -12,7 +12,7 @@ public:
 	int Get_Height() { return tHeight; }
 	int Get_Width() { return tWidth; }
 	bool Init_Texture();
-	bool Draw_Texture(BYTE *screenPointer, int screenWidth) const;
+	bool Draw_Texture(BYTE *screenPointer, int screenWidth);
 
 private:
 	int tWidth, tHeight;

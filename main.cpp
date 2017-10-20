@@ -37,8 +37,8 @@ void Render_Stars(Star *sArr, int size, int width, int height, float speedScale,
 
 void HAPI_Main()
 {
-	int width{ 1920 }; //Window width
-	int height{ 1080 }; //Window height
+	int width{ 800 }; //Window width
+	int height{ 600 }; //Window height
 	const HAPI_TMouseData &mData = HAPI.GetMouseData(); //HAPI mouse data
 
 	HAPI.ChangeFont("Arial");
@@ -51,14 +51,16 @@ void HAPI_Main()
 
 	Graphics g(width, height, screen);
 
-	//g.Create_Sprite("Data\\alphaThing.tga", "playerSprite", 64, 64);
+	g.Create_Sprite("Data\\alphaThing.tga", "playerSprite", 64, 64);
 
 	HAPI.SetShowFPS(true);
 
 	while (HAPI.Update()) {
 
 		g.Clear_Screen(0);
-		//g.Draw_Sprite("playerSprite");
+		for (int i{ 0 }; i < 1000; i++) {
+			g.Draw_Sprite("playerSprite");
+		}
 		/*if (!g.Draw_Sprite("background")) {
 			std::cout << "Draw fail" << std::endl;
 		}*/

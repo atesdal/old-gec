@@ -106,20 +106,23 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, H
 
 bool Graphics::Create_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height)
 {
-	if (spriteMap.find(uniqueName) != spriteMap.end()) {
-		Sprite *a = new Sprite(width, height);
-		HAPI.LoadTexture(fileName, &a->Get_tPntr, width, height);
+	if (spriteMap.find(uniqueName) == spriteMap.end()) {
+		Sprite *a = new Sprite(width, height, fileName);
+		if (!a->Init_Texture()) {
+			return false;
+		}
 		spriteMap[uniqueName] = a;
+		std::cout << spriteMap.at(uniqueName)->Get_Height();
 		return true;
 	}
 	return false;
 }
 
-bool Graphics::Draw_Sprite(const std::string &spriteName)
+bool Graphics::Draw_Sprite(const std::string &spriteName) const
 {
 	if (spriteMap.find(spriteName) == spriteMap.end()) {
 		return false;
 	}
-
+	spriteMap.at(spriteName)->Draw_Texture(startOfScreen, wWidth);
 	return true;
 }

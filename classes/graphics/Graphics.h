@@ -20,7 +20,7 @@ public:
 	bool Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour);
 
 	bool Create_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height);
-	bool Draw_Sprite(const std::string &spriteName);
+	bool Draw_Sprite(const std::string &spriteName) const;
 protected:
 
 private:

@@ -24,11 +24,11 @@ bool Sprite::Init_Texture()
 bool Sprite::Draw_Texture(BYTE *screenPointer, int screenWidth)
 {
 	int posX{ 400 };
-	int posY{ 300 };
+	int posY{ 300 }; // temp position vars
+
 	BYTE *scrPntr{ screenPointer };
 	BYTE *drawPntr{ tPntr };
 	int endIncrementS = (screenWidth - (tWidth - 1)) * 4;
-	//int endIncrementS = (screenWidth - (tWidth - 1)) * 4;
 	int startByte = (posX + (posY * screenWidth)) * 4;
 
 	scrPntr += startByte;
@@ -42,13 +42,16 @@ bool Sprite::Draw_Texture(BYTE *screenPointer, int screenWidth)
 		}
 		drawPntr += sizeof(HAPI_TColour);
 	}
-	return true;
-	//for (int i{ 0 }; i < tHeight; i++) {
-	//	memcpy(scrPntr, drawPntr, tWidth * 4);
-	//	drawPntr += tWidth * 4;
-	//	scrPntr += screenWidth * 4;
+
+	//for (int h{ 0 }; h < (tHeight); h++) {
+	//	for (int w{ 0 }; w < (tWidth); w++) {
+	//		memcpy(scrPntr, drawPntr, sizeof(HAPI_TColour));
+	//		scrPntr += sizeof(HAPI_TColour);
+	//		drawPntr += sizeof(HAPI_TColour);
+	//	}
+	//	scrPntr += endIncrementS;
 	//}
-	//return true;
+	return true;
 }
 
 //if ((shapeWidth + posX) > wWidth || posX < 0) { return false; } //Checks that pixels can be drawn in X-direction
