@@ -1,7 +1,8 @@
 #include "Sprite.h"
 
 Sprite::Sprite(int textureWidth, int textureHeight, std::string path) :
-	tWidth(textureWidth), tHeight(textureHeight), tPath(path), tPntr(nullptr)
+	tWidth(textureWidth), tHeight(textureHeight), tPath(path), tPntr(nullptr), 
+	tRect(textureWidth, textureHeight)
 {
 
 }
@@ -19,15 +20,22 @@ bool Sprite::Init_Texture()
 	return true;
 }
 
-bool Sprite::Fast_Blit(BYTE *screenPointer, int screenWidth, int posX, int posY)
-{
+bool Sprite::Fast_Blit(BYTE *screenPointer, int posX, int posY, const Rectangle &dest)
+{	
 	BYTE *scrPntr{ screenPointer };
 	BYTE *drawPntr{ tPntr };
+
+	tRect.ClipTo(dest, posX, posY);
+
 	//int endIncrementS = (screenWidth - (tWidth - 1) * 4; //Used for conditional method
-	int endIncrement = (screenWidth - tWidth) * 4; //Used for double for loop method
-	int startByte = (posX + (posY * screenWidth)) * 4;
+	int endIncrement = (dest.Get_Width() - tWidth) * 4; //Used for double for loop method
+	int startByte = (posX + (posY * dest.Get_Width())) * 4;
+
+	int endIncrementT = (tRect.Get_Width() - tWidth) * 4;
+	int startByteT = tRect.Get_Left() * 4;
 
 	scrPntr += startByte;
+	drawPntr += startByteT;
 
 	// Draw texture using a single for loop and a conditional to skip lines, seemingly less
 	// efficient than just using double for loops
@@ -46,8 +54,8 @@ bool Sprite::Fast_Blit(BYTE *screenPointer, int screenWidth, int posX, int posY)
 
 	// Same as above except double for loops being used instead of conditionals
 
-	for (int h{ 0 }; h < (tHeight); h++) {
-		for (int w{ 0 }; w < (tWidth); w++) {
+	for (int h{ 0 }; h < tRect.Get_Height; h++) {
+		for (int w{ 0 }; w < tRect.Get_Width; w++) {
 			memcpy(scrPntr, drawPntr, sizeof(HAPI_TColour));
 			scrPntr += sizeof(HAPI_TColour);
 			drawPntr += sizeof(HAPI_TColour);

@@ -1,7 +1,8 @@
 #include "Graphics.h"
 
-Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer) : 
-	wWidth(windowWidth), wHeight(windowHeight), startOfScreen(screenPointer)
+Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer) :
+	wWidth(windowWidth), wHeight(windowHeight), startOfScreen(screenPointer),
+	screenRect(windowWidth, windowHeight)
 {
 
 }
@@ -21,19 +22,13 @@ void Graphics::Clear_Screen(int grayScale)
 void Graphics::Clear_Screen(int r, int g, int b)
 {
 	BYTE *scrPntr = startOfScreen;
-	/*HAPI_TColour col = HAPI_TColour(r, g, b, 0);
+	HAPI_TColour col = HAPI_TColour(r, g, b, 0);
 	for (int i{ 0 }; i < (wWidth * wHeight); i++) {
 		memcpy(scrPntr, &col, sizeof(HAPI_TColour));
 		scrPntr += sizeof(HAPI_TColour);
-	}*/
-	for (int h{ 0 }; h < wHeight; h++) {
-		for (int w{ 0 }; w < wWidth; w++) {
-			scrPntr[0] = r;
-			scrPntr[1] = g;
-			scrPntr[2] = b;
-			scrPntr += sizeof(BYTE) * 4;
-		}
 	}
+	Rectangle test(50, 50);
+	test.ClipTo(screenRect, -30, -30);
 }
 
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
@@ -132,6 +127,6 @@ bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY) co
 	if (spriteMap.find(spriteName) == spriteMap.end()) {
 		return false;
 	}
-	spriteMap.at(spriteName)->Alpha_Blit(startOfScreen, wWidth, posX, posY);
+	spriteMap.at(spriteName)->Fast_Blit(startOfScreen, posX, posY, screenRect);
 	return true;
 }

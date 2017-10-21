@@ -3,6 +3,8 @@
 #include<HAPI_lib.h>
 using namespace HAPISPACE;
 
+#include "../rectangle/Rectangle.h"
+
 class Sprite
 {
 public:
@@ -18,7 +20,7 @@ public:
 	//Loads texture into memory using HAPI.LoadTexture
 	bool Init_Texture();
 	//Blits texture to screen using memcpy, not alpha compatible
-	bool Fast_Blit(BYTE *screenPointer, int screenWidth, int posX, int posY);
+	bool Fast_Blit(BYTE *screenPointer, int posX, int posY, const Rectangle &dest);
 	//Blits texture to screen using double for loops, alpha compatible but slow
 	bool Alpha_Blit(BYTE *screenPointer, int screenWidth, int posX, int posY);
 
@@ -26,5 +28,6 @@ private:
 	int tWidth, tHeight;
 	std::string tPath;
 	BYTE *tPntr;
+	Rectangle tRect;
 };
 
