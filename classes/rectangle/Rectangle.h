@@ -25,33 +25,53 @@ public:
 	//Returns top of rectangle
 	int Get_Top() const { return top; }
 	//Returns width of rectangle
-	int Get_Width() const { return right; }
+	int Get_Width() const { return (right - left); }
 	//Returns height of rectangle
-	int Get_Height() const { return bottom; }
+	int Get_Height() const { return (bottom - top); }
 
-	//Changes this instance of Rectangle to the intersect value of another rectangle
-	void ClipTo(const Rectangle &other, int posX, int posY)
+	//Changes this instance of rectangle to the intersect value of another rectangle
+	void Clip_To(const Rectangle &other, int posX, int posY)
 	{
-		std::cout << "Before min/max" << std::endl << left << " : " << other.left << std::endl
+		/*std::cout << "Before min/max" << std::endl << left << " : " << other.left << std::endl
 			<< right << " : " << other.right << std::endl
 			<< top << " : " << other.top << std::endl
-			<< bottom << " : " << other.bottom << std::endl;
+			<< bottom << " : " << other.bottom << std::endl;*/
 		Translate(posX, posY);
+
 		left = std::max(left, other.left);
 		right = std::min(right, other.right);
 		top = std::max(top, other.top);
 		bottom = std::min(bottom, other.bottom);
-		std::cout << "After min/max" << std::endl << left << " : " << other.left << std::endl
-			<< right << " : " << other.right << std::endl
-			<< top << " : " << other.top << std::endl
-			<< bottom << " : " << other.bottom << std::endl;
-		Translate(-posX, -posY);
-		std::cout << "Post translate" << std::endl << left << " : " << other.left << std::endl
-			<< right << " : " << other.right << std::endl
-			<< top << " : " << other.top << std::endl
-			<< bottom << " : " << other.bottom << std::endl;
-	}
 
+		Translate(-posX, -posY);
+	}
+	//Checks if this rectangle is completely contained within other rectangle
+	bool Contained_In(const Rectangle &other, int posX, int posY) {
+		Translate(posX, posY);
+
+		if ((left > 0 && right < other.Get_Width()) && (top > 0 && bottom < other.Get_Height())) {
+			Translate(-posX, -posY);
+			return true;
+		}
+		Translate(-posX, -posY);
+		return false;
+	}
+	//Checks if this rectangle is completely outside other rectangle
+	bool Not_Contained(const Rectangle &other, int posX, int posY) {
+		Translate(posX, posY);
+		//Checks if rectangle is outside on the X axis
+		if (right <= 0 || left > other.Get_Width()) {
+			Translate(-posX, -posY);
+			return true;
+		}
+		//And Y axis
+		else if (bottom < 0 || top >= other.Get_Height()) {
+			Translate(-posX, -posY);
+			return true;
+		}
+		Translate(-posX, -posY);
+		return false;
+	}
 private:
 	void Translate(int dx, int dy)
 	{
@@ -62,4 +82,3 @@ private:
 	}
 	int left, right, top, bottom;
 };
-

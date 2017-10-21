@@ -39,7 +39,11 @@ void HAPI_Main()
 {
 	int width{ 800 }; //Window width
 	int height{ 600 }; //Window height
+	int X, Y;
+	X = 50;
+	Y = 50;
 	const HAPI_TMouseData &mData = HAPI.GetMouseData(); //HAPI mouse data
+	HAPI_TKeyboardData kData;
 
 	HAPI.ChangeFont("Arial");
 
@@ -59,15 +63,29 @@ void HAPI_Main()
 	HAPI.SetShowFPS(true);
 
 	while (HAPI.Update()) {
+		kData = HAPI.GetKeyboardData();
+
+		if (kData.scanCode['W']) {
+			Y--;
+		}
+		if (kData.scanCode['A']) {
+			X--;
+		}
+		if (kData.scanCode['S']) {
+			Y++;
+		}
+		if (kData.scanCode['D']) {
+			X++;
+		}
 
 		g.Clear_Screen(0, 0, 0);
-		
 		for (int i{ 0 }; i < 1000; i++) {
-			if (!g.Draw_Sprite("playerSprite", 300, 300)) {
+			if (!g.Draw_Sprite("playerSprite", X, Y)) {
 				HAPI.UserMessage("Sprite drawing failed", "Error");
 				return;
 			}
 		}
+
 		/*if (!g.Draw_Sprite("background")) {
 			std::cout << "Draw fail" << std::endl;
 		}*/

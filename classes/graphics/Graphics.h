@@ -5,6 +5,7 @@ using namespace HAPISPACE;
 
 #include <unordered_map>
 #include "../sprite/Sprite.h"
+#include "../rectangle/Rectangle.h"
 
 class Graphics
 {
@@ -38,4 +39,5 @@ private:
 	int wWidth, wHeight;
 	BYTE *startOfScreen;
 	std::unordered_map<std::string, Sprite*> spriteMap;
+	Rectangle screenRect;
 };

@@ -22,12 +22,10 @@ public:
 	//Blits texture to screen using memcpy, not alpha compatible
 	bool Fast_Blit(BYTE *screenPointer, int posX, int posY, const Rectangle &dest);
 	//Blits texture to screen using double for loops, alpha compatible but slow
-	bool Alpha_Blit(BYTE *screenPointer, int screenWidth, int posX, int posY);
+	bool Alpha_Blit(BYTE *screenPointer, int posX, int posY, const Rectangle &dest);
 
 private:
 	int tWidth, tHeight;
 	std::string tPath;
 	BYTE *tPntr;
-	Rectangle tRect;
 };
-

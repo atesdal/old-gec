@@ -27,8 +27,6 @@ void Graphics::Clear_Screen(int r, int g, int b)
 		memcpy(scrPntr, &col, sizeof(HAPI_TColour));
 		scrPntr += sizeof(HAPI_TColour);
 	}
-	Rectangle test(50, 50);
-	test.ClipTo(screenRect, -30, -30);
 }
 
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
@@ -127,6 +125,6 @@ bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY) co
 	if (spriteMap.find(spriteName) == spriteMap.end()) {
 		return false;
 	}
-	spriteMap.at(spriteName)->Fast_Blit(startOfScreen, posX, posY, screenRect);
+	spriteMap.at(spriteName)->Alpha_Blit(startOfScreen, posX, posY, screenRect);
 	return true;
 }
