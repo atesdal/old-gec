@@ -61,6 +61,7 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, i
 	return true;
 }
 
+// Needs updating to double for-loop //
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour)
 {
 	if (shapeWidth > wWidth || shapeHeight > wHeight) { return false; }
@@ -81,7 +82,7 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeCol
 	return true;
 }
 
-
+// Needs updating to double for-loop //
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour)
 {
 	if ((shapeWidth + posX) > wWidth || posX < 0) { return false; } //Checks that pixels can be drawn in X-direction
@@ -111,6 +112,7 @@ bool Graphics::Create_Sprite(const std::string &fileName, const std::string &uni
 	if (spriteMap.find(uniqueName) == spriteMap.end()) {
 		Sprite *a = new Sprite(width, height, fileName);
 		if (!a->Init_Texture()) {
+			delete a;
 			return false;
 		}
 		spriteMap[uniqueName] = a;

@@ -1,4 +1,39 @@
 Adrian Tesdal
+Milestone 2 version 1.00 26.10.2017
+--------------------------------
+
+New Functionality
+-----------------
+- Added classes for handling Graphics, and internally handling Sprites and an auxilliary class
+Rectangle to handle clipping.
+- Graphics also handles all old functions like Draw_Pixel and Clear_Screen.
+- Can draw infinite amounts of sprites while just loading them in once.
+- Player object can be moved using WASD
+
+Code Additions
+--------------
+- As mentioned above, most previous code has been consolidated into the Graphics class
+- Several performance improvements have been made, such as using a double for loop 
+instead of a heavy modulus test, and the blitting technique is dependant on whether the texture
+being blitted is on/clipping/off the screen.
+- Easy to use Sprite container, using the unordered map, Create_Sprite will first check if there
+is an entry with that name, and if no, add it so it can be used later with Draw_Sprite.
+
+Tests
+-----
+- All tests done in 1500x1000.
+- Tested with drawing one set of 1000 "alphaThings" in the same position, and moving them around
+the screen, partially out of the screen, and completely off. FPS noticably higher when less of the
+"alphaThing" was present on the screen.
+- Tested with drawing two sets of 1000 "alpahThings" in two different locations, same results as above.
+- Same tests as above also done using Fast_Blit rather than Alpha_Blit, only difference was a noticably
+higher FPS as Fast_Blit doesn't take alpha into account.
+
+See https://github.com/atesdal/gec/ for full step by step progress on this project.
+
+
+Legacy notes
+-------------
 Milestone 1 version 1.00 12.10.2017
 --------------------------------
 
