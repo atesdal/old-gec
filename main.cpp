@@ -50,10 +50,6 @@ void HAPI_Main()
 		HAPI.UserMessage("Sprite loading failed", "Error");
 		return;
 	}
-	if (!g.Create_Sprite("Data\\bckground.tga", "background", 256, 256)) {
-		HAPI.UserMessage("Sprite loading failed", "Error");
-		return;
-	}
 
 	HAPI.SetShowFPS(true);
 
@@ -74,22 +70,10 @@ void HAPI_Main()
 		}
 
 		g.Clear_Screen(0);
-
-		if (!g.Draw_Sprite("background", 0, 0)) {
+		if (!g.Draw_Sprite("playerSprite", X, Y)) {
 			HAPI.UserMessage("Sprite drawing failed", "Error");
 			return;
 		}
-
-		//for (int i{ 0 }; i < 1000; i++) {
-			if (!g.Draw_Sprite("playerSprite", X, Y)) {
-				HAPI.UserMessage("Sprite drawing failed", "Error");
-				return;
-			}
-		//}
-
-		/*if (!g.Draw_Sprite("background")) {
-			std::cout << "Draw fail" << std::endl;
-		}*/
 	}
 	return;
 }
