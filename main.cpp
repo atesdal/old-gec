@@ -28,8 +28,8 @@ using namespace HAPISPACE;
 
 void HAPI_Main()
 {
-	int width{ 1500 }; //Window width
-	int height{ 1000 }; //Window height
+	int width{ 800 }; //Window width
+	int height{ 600 }; //Window height
 	int X, Y;
 	X = 50;
 	Y = 50;
@@ -51,7 +51,7 @@ void HAPI_Main()
 		return;
 	}
 
-	if (!g.Create_Anim_Sprite("Data\\trump_run.png", "trump", 600, 400, 100, 100, 6, 3)) {
+	if (!g.Create_Anim_Sprite("Data\\trump_run.png", "trump", 1536, 1024, 256, 256, 6, 1)) {
 		return;
 	}
 
@@ -63,25 +63,33 @@ void HAPI_Main()
 
 		if (kData.scanCode['S']) {
 			Y++;
+			g.Change_Anim(0, "trump");
 		}
 		else if (kData.scanCode['W']) {
 			Y--;
+			g.Change_Anim(2, "trump");
 		}
 		if (kData.scanCode['D']) {
 			X++;
+			g.Change_Anim(1, "trump");
 		}
 		else if (kData.scanCode['A']) {
 			X--;
+			g.Change_Anim(3, "trump");
 		}
-		HAPI_TColour col(20, 130, 0);
-		g.Draw_Pixel(300, 300, 50, 50, col);
 
-		//g.Clear_Screen(0);
-		//if (!g.Draw_Sprite("playerSprite", X, Y)) {
-		//	HAPI.UserMessage("Sprite drawing failed", "Error");
-		//	return;
-		//}
-		//g.Draw_Sprite("trump", 50, 50);
+		g.Clear_Screen(0);
+		if (!g.Draw_Sprite("playerSprite", X, Y)) {
+			HAPI.UserMessage("Sprite drawing failed", "Error");
+			return;
+		}
+		g.Draw_Sprite("trump", 50, 50);
+		g.Draw_Sprite("trump", 150, 150);
+		g.Draw_Sprite("trump", 500, 350);
+		g.Draw_Sprite("trump", 300, 700);
+		g.Draw_Sprite("trump", 1500, 700);
+		g.Draw_Sprite("trump", X, Y);
+
 	}
 	return;
 }

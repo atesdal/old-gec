@@ -33,6 +33,7 @@ public:
 	bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int fWidth, int fHeight, int numFrames, int animRow);
 	//Draw loaded sprite using its key
 	bool Draw_Sprite(const std::string &spriteName, int posX, int posY) const;
+	void Change_Anim(int newAnimRow, const std::string &spriteName);
 
 protected:
 

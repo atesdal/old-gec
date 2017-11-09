@@ -29,6 +29,7 @@ bool Sprite::Init_Texture()
 	return true;
 }
 
+// NOT ANIMATION COMPATIBLE //
 bool Sprite::Fast_Blit(BYTE *screenPointer, int posX, int posY, const Rectangle &dest)
 {
 	if (screenPointer == nullptr || tPntr == nullptr) {
@@ -93,29 +94,29 @@ bool Sprite::Alpha_Blit(BYTE *screenPointer, int posX, int posY, const Rectangle
 	BYTE *scrPntr{ screenPointer };
 	BYTE *drawPntr{ tPntr };
 
-	//Rectangle tRect(Get_Width(), Get_Height());
 	Rectangle tRect(frameRect);
 
 	tRect.Clip_To(dest, posX, posY);
-	const int rowCoords = rowNum * tRect.Get_Height();
-	tRect.Translate(frameRect.Get_Width() * fNum, rowCoords);
-	std::cout << tRect.Get_Top() << std::endl;
 
-	if (tRect.Not_Contained(dest, posX, posY)) {
+	tRect.Translate(frameRect.Get_Width() * fNum, rowNum * frameRect.Get_Height());
+
+	if (frameRect.Not_Contained(dest, posX, posY)) {
 		//Do nothing
 	}
-	else if (tRect.Contained_In(dest, posX, posY)) {
+	else if (frameRect.Contained_In(dest, posX, posY)) {
 		int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-		int endIncrementT = (Get_Width() - tRect.Get_Width()) * 4;
-
 		int startByte = (posX + (posY * dest.Get_Width())) * 4;
+
+		int endIncrementT = (Get_Width() - tRect.Get_Width()) * 4;		
 		int startByteT = (tRect.Get_Left() + (tRect.Get_Top() * Get_Width())) * 4;
+
 		BYTE alpha;
+
 		scrPntr += startByte;
 		drawPntr += startByteT;
 
 		for (int h{ 0 }; h < tRect.Get_Height(); h++) {
-			for (int w{ 0 }; w < tRect.Get_Width(); w++) {
+			for (int w{ 0 }; w < tRect.Get_Width(); w++) {		
 				alpha = drawPntr[3];
 				if (alpha == 255) {
 					memcpy(scrPntr, drawPntr, sizeof(HAPI_TColour));

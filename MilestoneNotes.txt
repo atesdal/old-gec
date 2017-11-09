@@ -1,4 +1,29 @@
 Adrian Tesdal
+Milestone 3 version 1.00 26.10.2017
+See https://github.com/atesdal/gec/ for full step by step progress on this project.
+--------------------------------
+
+New Functionality
+-----------------
+- Add animation sprites, can change to different rows in spritesheet provided they are uniform in height and width.
+
+Code Additions
+--------------
+- Various performance fixes for somewhat depracated functions.
+- Legal inputs enforced in more functions.
+- Alpha_Blit updated to support animation, Fast_Blit will follow shortly.
+
+Tests
+-----
+- All tests done in 1920x1080
+- Tested with several animated sprites, and changing animation row in all of them.
+- Tested same as above but with one moveable animated sprite.
+- Tested same as above and also moved the animated sprite out of bounds to test clipping.
+
+Running Trump sprite found and downloaded from http://www.3dcartoonmodels.com/2017/02/little-trump-sprites-sheet-free-asset.html
+
+
+Adrian Tesdal
 Milestone 2 version 1.00 26.10.2017
 --------------------------------
 
@@ -32,8 +57,6 @@ higher FPS as Fast_Blit doesn't take alpha into account.
 See https://github.com/atesdal/gec/ for full step by step progress on this project.
 
 
-Legacy notes
--------------
 Milestone 1 version 1.00 12.10.2017
 --------------------------------
 

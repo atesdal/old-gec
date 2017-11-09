@@ -158,3 +158,15 @@ bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY) co
 	spriteMap.at(spriteName)->Alpha_Blit(startOfScreen, posX, posY, screenRect);
 	return true;
 }
+
+void Graphics::Change_Anim(int newAnimRow, const std::string &spriteName)
+{
+	if (spriteMap.find(spriteName) == spriteMap.end()) {
+		HAPI.UserMessage("Sprite not found", "Error");
+		return;
+	}
+	if (!spriteMap.at(spriteName)->Change_Anim(newAnimRow)) {
+		HAPI.UserMessage("Internal sprite animation error", "Error");
+		return;
+	}
+}
