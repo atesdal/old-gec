@@ -51,6 +51,10 @@ void HAPI_Main()
 		return;
 	}
 
+	if (!g.Create_Anim_Sprite("Data\\trump_run.png", "trump", 600, 400, 100, 100, 6, 3)) {
+		return;
+	}
+
 	HAPI.SetShowFPS(true);
 
 	while (HAPI.Update()) {
@@ -74,6 +78,7 @@ void HAPI_Main()
 			HAPI.UserMessage("Sprite drawing failed", "Error");
 			return;
 		}
+		g.Draw_Sprite("trump", 50, 50);
 	}
 	return;
 }

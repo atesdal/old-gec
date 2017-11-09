@@ -18,7 +18,7 @@ public:
 	//Clear screen to grayscale
 	void Clear_Screen(int grayScale);
 	//Clear screen to colour using r, g, b values
-	void Clear_Screen(int r, int g, int b);
+	void Clear_Screen(HAPI_TColour screenColour);
 	//Colours pixel(s) in a square shape (grayscale) determined by width and height in top left corner
 	bool Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale);
 	//Colours pixel(s) in a square shape (grayscale) determined by width and height at position (x, y)
@@ -28,15 +28,16 @@ public:
 	//Colours pixel(s) in a square shape (HAPI_TColour) determined by width and height at position (x, y)
 	bool Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour);
 
-	//Load sprite and adds to unordered map with key = uniqueName
 	bool Create_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height);
+	//Load sprite and adds to unordered map with key = uniqueName
+	bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int fWidth, int fHeight, int numFrames, int animRow);
 	//Draw loaded sprite using its key
 	bool Draw_Sprite(const std::string &spriteName, int posX, int posY) const;
 
 protected:
 
 private:
-	int wWidth, wHeight;
+	const int wWidth, wHeight;
 	BYTE *startOfScreen;
 	std::unordered_map<std::string, Sprite*> spriteMap;
 	Rectangle screenRect;

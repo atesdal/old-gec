@@ -10,6 +10,8 @@ class Sprite
 public:
 	//Creates sprite instance, initializes width, height and filepath
 	Sprite(int textureWidth, int textureHeight, std::string path);
+	//Creates animated sprite instance, initializes width, height and filepath
+	Sprite(int textureWidth, int textureHeight, std::string path, int frameWidth, int frameHeight, int numOfFrames, int animRow);
 	//Destructor for sprites, called by Graphics destructor
 	~Sprite();
 
@@ -23,9 +25,12 @@ public:
 	bool Fast_Blit(BYTE *screenPointer, int posX, int posY, const Rectangle &dest);
 	//Blits texture to screen using double for loops, alpha compatible but slow
 	bool Alpha_Blit(BYTE *screenPointer, int posX, int posY, const Rectangle &dest);
+	//Changes the current animation row
+	bool Change_Anim(int newRow);
 
 private:
-	int tWidth, tHeight;
+	int tWidth, tHeight, fNum, numFrames, rowNum;
 	std::string tPath;
 	BYTE *tPntr;
+	Rectangle frameRect;
 };
