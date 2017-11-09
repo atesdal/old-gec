@@ -58,6 +58,7 @@ void HAPI_Main()
 	HAPI.SetShowFPS(true);
 
 	while (HAPI.Update()) {
+
 		kData = HAPI.GetKeyboardData();
 
 		if (kData.scanCode['S']) {
@@ -72,13 +73,15 @@ void HAPI_Main()
 		else if (kData.scanCode['A']) {
 			X--;
 		}
+		HAPI_TColour col(20, 130, 0);
+		g.Draw_Pixel(300, 300, 50, 50, col);
 
-		g.Clear_Screen(0);
-		if (!g.Draw_Sprite("playerSprite", X, Y)) {
-			HAPI.UserMessage("Sprite drawing failed", "Error");
-			return;
-		}
-		g.Draw_Sprite("trump", 50, 50);
+		//g.Clear_Screen(0);
+		//if (!g.Draw_Sprite("playerSprite", X, Y)) {
+		//	HAPI.UserMessage("Sprite drawing failed", "Error");
+		//	return;
+		//}
+		//g.Draw_Sprite("trump", 50, 50);
 	}
 	return;
 }

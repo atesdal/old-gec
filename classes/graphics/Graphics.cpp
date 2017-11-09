@@ -52,8 +52,13 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
 
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale)
 {
-	if ((shapeWidth + posX) > wWidth || posX < 0) { return false; } //Checks that pixels can be drawn in X-direction
-	else if ((shapeHeight + posY) > wHeight || posY < 0) { return false; } // and Y-direction
+	if ((shapeWidth + posX) > wWidth || posX < 0) { 
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale))", "Error");
+		return false; 
+	}
+	else if ((shapeHeight + posY) > wHeight || posY < 0) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale))", "Error");
+		return false; } // and Y-direction
 
 	int endIncrement = wWidth * 4;
 	int startByte = (posX + (posY * wWidth)) * 4;
@@ -68,48 +73,49 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, i
 	return true;
 }
 
-// Needs updating to double for-loop //
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour)
 {
-	if (shapeWidth > wWidth || shapeHeight > wHeight) { return false; }
+	if (shapeWidth > wWidth || shapeHeight > wHeight) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour))", "Error");
+		return false;
+	}
 
 	BYTE *scrPntr = startOfScreen;
-	int endIncrement = (wWidth - (shapeWidth - 1)) * 4;
+	int endIncrement = (wWidth - shapeWidth) * 4;
 
-	for (int h{ 1 }; h <= (shapeHeight * shapeWidth); h++) {
-		if (h % shapeWidth == 0) {
-			memcpy(scrPntr, &shapeColour, sizeof(HAPI_TColour));
-			scrPntr += endIncrement;
-		}
-		else {
+	for (int h{ 0 }; h < shapeHeight; h++) {
+		for (int w{ 0 }; w < shapeWidth; w++) {
 			memcpy(scrPntr, &shapeColour, sizeof(HAPI_TColour));
 			scrPntr += sizeof(HAPI_TColour);
 		}
+		scrPntr += endIncrement;
 	}
 	return true;
 }
 
-// Needs updating to double for-loop //
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour)
 {
-	if ((shapeWidth + posX) > wWidth || posX < 0) { return false; } //Checks that pixels can be drawn in X-direction
-	else if ((shapeHeight + posY) > wHeight || posY < 0) { return false; } // and Y-direction
+	if ((shapeWidth + posX) > wWidth || posX < 0) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour))", "Error");
+		return false;
+	} 
+	else if ((shapeHeight + posY) > wHeight || posY < 0) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour))", "Error");
+		return false;
+	}
 
-	int endIncrement = (wWidth - (shapeWidth - 1)) * 4;
-
+	int endIncrement = (wWidth - shapeWidth) * 4;
 	int startByte = (posX + (posY * wWidth)) * 4;
 
 	BYTE *scrPntr = startOfScreen;
 	scrPntr += startByte; //Sets screen pointer to original writing position
 
-	for (int h{ startByte }; h < (shapeHeight * shapeWidth) + startByte; h++) {
-		memcpy(scrPntr, &shapeColour, sizeof(HAPI_TColour));
-		if ((h - startByte + 1) % shapeWidth == 0) {
-			scrPntr += endIncrement;
-		}
-		else {
+	for (int h{ startByte }; h < shapeHeight + startByte; h++) {
+		for (int w{ 0 }; w < shapeWidth; w++) {
+			memcpy(scrPntr, &shapeColour, sizeof(HAPI_TColour));
 			scrPntr += sizeof(HAPI_TColour);
 		}
+		scrPntr += endIncrement;
 	}
 	return true;
 }
