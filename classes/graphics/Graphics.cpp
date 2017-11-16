@@ -1,10 +1,12 @@
 #include "Graphics.h"
 #include <algorithm>
+#include <cassert>
 
 Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer) :
 	wWidth(windowWidth), wHeight(windowHeight), startOfScreen(screenPointer),
 	screenRect(windowWidth, windowHeight)
 {
+	assert(screenPointer);
 	//Enforce no nullpointer, no negative dimensions
 }
 

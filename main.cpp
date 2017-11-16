@@ -26,14 +26,29 @@ using namespace HAPISPACE;
 // Every HAPI program has a HAPI_Main as an entry point
 // When this function exits the program will close down
 
+struct MidRange {
+	int lower, upper;
+};
+
 void HAPI_Main()
 {
-	int width{ 800 }; //Window width
-	int height{ 600 }; //Window height
+	int width{ 1500 }; //Window width
+	int height{ 750 }; //Window height
+	int midX = width / 2;
+	int midY = height / 2;
+	MidRange xRange;
+	xRange.lower = midX - 100;
+	xRange.upper = midX + 100;
+	MidRange yRange;
+	yRange.lower = midY - 100;
+	yRange.upper = midY + 100;
+	int rRumble{ 0 };
+	int lRumble{ 0 };
 	int X, Y;
 	X = 50;
 	Y = 50;
 	const HAPI_TMouseData &mData = HAPI.GetMouseData(); //HAPI mouse data
+	HAPI_TControllerData cData;
 	HAPI_TKeyboardData kData;
 
 	HAPI.ChangeFont("Arial");
@@ -60,36 +75,71 @@ void HAPI_Main()
 	while (HAPI.Update()) {
 
 		kData = HAPI.GetKeyboardData();
+		cData = HAPI.GetControllerData(0);
 
-		if (kData.scanCode['S']) {
-			Y++;
-			g.Change_Anim(0, "trump");
+		//if (kData.scanCode['S']) {
+		//	Y++;
+		//	g.Change_Anim(0, "trump");
+		//}
+		//else if (kData.scanCode['W']) {
+		//	Y--;
+		//	g.Change_Anim(2, "trump");
+		//}
+		//if (kData.scanCode['D']) {
+		//	X++;
+		//	g.Change_Anim(1, "trump");
+		//}
+		//else if (kData.scanCode['A']) {
+		//	X--;
+		//	g.Change_Anim(3, "trump");
+		//}
+
+		if (cData.isAttached) {
+			if (cData.digitalButtons[HK_DIGITAL_DPAD_DOWN]) {
+				Y++;
+				g.Change_Anim(0, "trump");
+			}
+			else if (cData.digitalButtons[HK_DIGITAL_DPAD_UP]) {
+				Y--;
+				g.Change_Anim(2, "trump");
+			}
+			if (cData.digitalButtons[HK_DIGITAL_DPAD_LEFT]) {
+				X--;
+				g.Change_Anim(3, "trump");
+			}
+			else if (cData.digitalButtons[HK_DIGITAL_DPAD_RIGHT]) {
+				X++;
+				g.Change_Anim(1, "trump");
+			}
 		}
-		else if (kData.scanCode['W']) {
-			Y--;
-			g.Change_Anim(2, "trump");
+
+		if (X < xRange.upper && X > xRange.lower) {
+			rRumble = 65535;
 		}
-		if (kData.scanCode['D']) {
-			X++;
-			g.Change_Anim(1, "trump");
+		else {
+			rRumble = 0;
 		}
-		else if (kData.scanCode['A']) {
-			X--;
-			g.Change_Anim(3, "trump");
+		if (Y < yRange.upper && Y > yRange.lower) {
+			lRumble = 65535;
 		}
+		else {
+			lRumble = 0;
+		}
+
+		HAPI.SetControllerRumble(0, lRumble, rRumble);
 
 		g.Clear_Screen(0);
-		if (!g.Draw_Sprite("playerSprite", X, Y)) {
-			HAPI.UserMessage("Sprite drawing failed", "Error");
-			return;
-		}
-		g.Draw_Sprite("trump", 50, 50);
-		g.Draw_Sprite("trump", 150, 150);
-		g.Draw_Sprite("trump", 500, 350);
-		g.Draw_Sprite("trump", 300, 700);
-		g.Draw_Sprite("trump", 1500, 700);
+		//if (!g.Draw_Sprite("playerSprite", X, Y)) {
+		//	HAPI.UserMessage("Sprite drawing failed", "Error");
+		//	return;
+		//}
+		//for (int i{ 0 }; i < 500; i++) {
+		//	g.Draw_Sprite("trump", i, i);
+		//	for (int u{ 500 }; u < 0; u--) {
+		//		g.Draw_Sprite("trump", u, u);
+		//	}
+		//}
 		g.Draw_Sprite("trump", X, Y);
-
 	}
 	return;
 }
