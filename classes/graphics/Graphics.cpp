@@ -1,5 +1,8 @@
 #include "Graphics.hpp"
 #include "sprite\Sprite.hpp"
+#include "sprite\StaticSprite.hpp"
+#include "sprite\LineSprite.hpp"
+#include "sprite\SquareSprite.hpp"
 #include <algorithm>
 #include <cassert>
 
@@ -123,53 +126,50 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, H
 	return true;
 }
 
-//bool Graphics::Create_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height)
-//{
-//	if (spriteMap.find(uniqueName) == spriteMap.end()) {
-//		Sprite *a = new Sprite(width, height, fileName);
-//		if (!a->Init_Texture()) {
-//			delete a;
-//			return false;
-//		}
-//		spriteMap[uniqueName] = a;
-//		std::cout << spriteMap.at(uniqueName)->Get_Height();
-//		return true;
-//	}
-//	return false;
-//}
+bool Graphics::Create_Static_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height)
+{
+	if (spriteMap_.find(uniqueName) == spriteMap_.end()) {
+		StaticSprite *a = new StaticSprite(width, height, fileName);
+		if (!a->Init_Texture()) {
+			delete a;
+			return false;
+		}
+		spriteMap_[uniqueName] = a;
+		return true;
+	}
+	return false;
+}
 
-//bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int fWidth, int fHeight, int numFrames, int animRow)
-//{
-//	if (spriteMap.find(uniqueName) == spriteMap.end()) {
-//		Sprite *a = new Sprite(width, height, fileName, fWidth, fHeight, numFrames, animRow);
-//		if (!a->Init_Texture()) {
-//			delete a;
-//			return false;
-//		}
-//		spriteMap[uniqueName] = a;
-//		std::cout << spriteMap.at(uniqueName)->Get_Height();
-//		return true;
-//	}
-//	return false;
-//}
+bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int fWidth, int fHeight, int numFrames, int numRows)
+{
+	if (spriteMap_.find(uniqueName) == spriteMap_.end()) {
+		if (numRows != 1) {
+			SquareSprite *a = new SquareSprite(width, height, fileName, numFrames, numRows);
+			if (!a->Init_Texture()) {
+				delete a;
+				return false;
+			}
+			spriteMap_[uniqueName] = a;
+			return true;
+		}
+		else {
+			LineSprite *a = new LineSprite(width, height, fileName, numFrames);
+			if (!a->Init_Texture()) {
+				delete a;
+				return false;
+			}
+			spriteMap_[uniqueName] = a;
+			return true;
+		}
+	}
+	return false;
+}
 
-//bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY) const
-//{
-//	if (spriteMap.find(spriteName) == spriteMap.end()) {
-//		return false;
-//	}
-//	spriteMap.at(spriteName)->Alpha_Blit(startOfScreen, posX, posY, screenRect);
-//	return true;
-//}
-
-//void Graphics::Change_Anim(int newAnimRow, const std::string &spriteName)
-//{
-//	if (spriteMap.find(spriteName) == spriteMap.end()) {
-//		HAPI.UserMessage("Sprite not found", "Error");
-//		return;
-//	}
-//	if (!spriteMap.at(spriteName)->Change_Anim(newAnimRow)) {
-//		HAPI.UserMessage("Internal sprite animation error", "Error");
-//		return;
-//	}
-//}
+bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY) const
+{
+	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
+		return false;
+	}
+	spriteMap_.at(spriteName)->Render(startOfScreen_, screenRect_, posX, posY, true);
+	return true;
+}

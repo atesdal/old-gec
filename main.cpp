@@ -61,10 +61,14 @@ void HAPI_Main()
 
 	Graphics g(width, height, screen);
 
+	g.Create_Static_Sprite("Data\\alphaThing.tga", "player", 64, 64);
 
 	HAPI.SetShowFPS(true);
 
 	while (HAPI.Update()) {
+		g.Clear_Screen(0);
+
+
 
 		kData = HAPI.GetKeyboardData();
 		cData = HAPI.GetControllerData(0);
@@ -104,7 +108,7 @@ void HAPI_Main()
 				//g.Change_Anim(1, "trump");
 			}
 		}
-
+		g.Draw_Sprite("player", X, Y);
 		if (X < xRange.upper && X > xRange.lower) {
 			rRumble = 65535;
 		}
@@ -120,7 +124,7 @@ void HAPI_Main()
 
 		HAPI.SetControllerRumble(0, lRumble, rRumble);
 
-		g.Clear_Screen(0);
+		
 
 	}
 	return;

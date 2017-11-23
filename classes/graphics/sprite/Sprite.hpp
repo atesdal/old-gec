@@ -20,11 +20,11 @@ public:
 	//Loads texture into memory using HAPI.LoadTexture
 	bool Init_Texture();
 	//Draws texture
-	virtual void Update(BYTE* screenPtr, const Rectangle &dest, int posX, int posY) = 0;
+	virtual void Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha = false) = 0;
 
 protected:
 	//Blits texture to screen using double for loops, alpha compatible but slow
-	//bool Alpha_Blit(BYTE *screenPointer, int posX, int posY, const Rectangle &dest);
+	void Alpha_Blit(BYTE *currSPtr, BYTE *currTPtr);
 
 	int tWidth_, tHeight_;
 	std::string tPath_;

@@ -7,8 +7,9 @@ SquareSprite::SquareSprite(int textureWidth, int textureHeight, std::string path
 
 SquareSprite::~SquareSprite()
 {
+	delete[] tPntr_;
 }
 
-void SquareSprite::Update()
+void SquareSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
 {
 }

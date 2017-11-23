@@ -6,8 +6,9 @@ LineSprite::LineSprite(int textureWidth, int textureHeight, std::string path, in
 
 LineSprite::~LineSprite()
 {
+	delete[] tPntr_;
 }
 
-void LineSprite::Update()
+void LineSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
 {
 }

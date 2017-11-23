@@ -10,7 +10,6 @@ class SquareSprite;
 class LineSprite;
 class StaticSprite;
 
-
 class Graphics
 {
 public:
@@ -31,13 +30,12 @@ public:
 	bool Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour);
 	//Colours pixel(s) in a square shape (HAPI_TColour) determined by width and height at position (x, y)
 	bool Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour);
-
-	bool Create_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height);
-	//Load sprite and adds to unordered map with key = uniqueName
-	bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int fWidth, int fHeight, int numFrames, int animRow);
+	//Load non-animated sprite to unordered map with key = uniqueName
+	bool Create_Static_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height);
+	//Load sprite and adds to unordered map with key = uniqueName, change between line and square sheet layout by adding numRows parameter at the end
+	bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int fWidth, int fHeight, int numFrames, int numRows = 1);
 	//Draw loaded sprite using its key
 	bool Draw_Sprite(const std::string &spriteName, int posX, int posY) const;
-	void Change_Anim(int newAnimRow, const std::string &spriteName);
 
 protected:
 
