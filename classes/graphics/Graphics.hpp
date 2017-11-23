@@ -33,7 +33,7 @@ public:
 	//Load non-animated sprite to unordered map with key = uniqueName
 	bool Create_Static_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height);
 	//Load sprite and adds to unordered map with key = uniqueName, change between line and square sheet layout by adding numRows parameter at the end
-	bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int fWidth, int fHeight, int numFrames, int numRows = 1);
+	bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows = 1, int numLoops = 0);
 	//Draw loaded sprite using its key
 	bool Draw_Sprite(const std::string &spriteName, int posX, int posY) const;
 

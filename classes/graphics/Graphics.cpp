@@ -7,8 +7,7 @@
 #include <cassert>
 
 Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer) :
-	wWidth_(windowWidth), wHeight_(windowHeight), startOfScreen_(screenPointer),
-	screenRect_(windowWidth, windowHeight)
+	wWidth_(windowWidth), wHeight_(windowHeight), startOfScreen_(screenPointer), screenRect_(windowWidth, windowHeight)
 {
 	assert(screenPointer);
 	//Enforce no nullpointer, no negative dimensions
@@ -140,11 +139,11 @@ bool Graphics::Create_Static_Sprite(const std::string &fileName, const std::stri
 	return false;
 }
 
-bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int fWidth, int fHeight, int numFrames, int numRows)
+bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows, int numLoops)
 {
 	if (spriteMap_.find(uniqueName) == spriteMap_.end()) {
 		if (numRows != 1) {
-			SquareSprite *a = new SquareSprite(width, height, fileName, numFrames, numRows);
+			SquareSprite *a = new SquareSprite(width, height, fileName, numFrames, numRows, numLoops);
 			if (!a->Init_Texture()) {
 				delete a;
 				return false;
@@ -153,7 +152,7 @@ bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string
 			return true;
 		}
 		else {
-			LineSprite *a = new LineSprite(width, height, fileName, numFrames);
+			LineSprite *a = new LineSprite(width, height, fileName, numFrames, numLoops);
 			if (!a->Init_Texture()) {
 				delete a;
 				return false;

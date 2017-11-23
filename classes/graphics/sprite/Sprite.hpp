@@ -19,11 +19,11 @@ public:
 	int Get_Width() const { return tWidth_; }
 	//Loads texture into memory using HAPI.LoadTexture
 	bool Init_Texture();
-	//Draws texture
+	//Draws texture, set forceNonAlpha = true if you know texture does not use alpha
 	virtual void Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha = false) = 0;
+	virtual void Set_Loop(int amount);
 
 protected:
-	//Blits texture to screen using double for loops, alpha compatible but slow
 	void Alpha_Blit(BYTE *currSPtr, BYTE *currTPtr);
 
 	int tWidth_, tHeight_;

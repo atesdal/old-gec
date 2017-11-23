@@ -29,6 +29,10 @@ public:
 	int Get_Width() const { return (right - left); }
 	//Returns height of rectangle
 	int Get_Height() const { return (bottom - top); }
+	//Sets width of rectangle
+	void Set_Width(int width) { (width < 1) ? right = right : right = width; }
+	//Sets height of rectangle
+	void Set_Height(int height) { (height < 1) ? bottom = bottom : bottom = height; }
 
 	void Translate(int dx, int dy)
 	{

@@ -1,16 +1,14 @@
 #include "Sprite.hpp"
-#include <algorithm>
 
-Sprite::Sprite(int textureWidth, int textureHeight, std::string path) : tWidth_(textureWidth), tHeight_(textureHeight),
-	tPath_(path), tPntr_(nullptr), frameRect_(textureWidth, textureHeight)
+Sprite::Sprite(int textureWidth, int textureHeight, std::string path) :
+	tWidth_(textureWidth), tHeight_(textureHeight), tPath_(path), tPntr_(nullptr), frameRect_(textureWidth, textureHeight)
 {
-
+	
 }
-
 
 Sprite::~Sprite()
 {
-	delete[] tPntr_;
+
 }
 
 bool Sprite::Init_Texture()
@@ -20,6 +18,11 @@ bool Sprite::Init_Texture()
 		return false;
 	}
 	return true;
+}
+
+void Sprite::Set_Loop(int amount)
+{
+	HAPI.UserMessage("Sprites of this type cannot loop.", "Error");
 }
 
 void Sprite::Alpha_Blit(BYTE *currSPtr, BYTE *currTPtr)

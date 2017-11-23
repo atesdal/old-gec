@@ -1,6 +1,7 @@
 #include "StaticSprite.hpp"
 
-StaticSprite::StaticSprite(int textureWidth, int textureHeight, std::string path) : Sprite(textureWidth, textureHeight, path)
+StaticSprite::StaticSprite(int textureWidth, int textureHeight, std::string path) : 
+	Sprite(textureWidth, textureHeight, path)
 {
 
 }

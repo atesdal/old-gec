@@ -61,11 +61,15 @@ void HAPI_Main()
 
 	Graphics g(width, height, screen);
 
-	g.Create_Static_Sprite("Data\\alphaThing.tga", "player", 64, 64);
+	//g.Create_Static_Sprite("Data\\alphaThing.tga", "player", 64, 64);
+	g.Create_Anim_Sprite("Data\\linetest.png", "line", 1536, 256, 6);
 
 	HAPI.SetShowFPS(true);
 
 	while (HAPI.Update()) {
+		// // // // // // //
+		// KEEP THIS HERE //
+		// // // // // // //
 		g.Clear_Screen(0);
 
 
@@ -73,59 +77,55 @@ void HAPI_Main()
 		kData = HAPI.GetKeyboardData();
 		cData = HAPI.GetControllerData(0);
 
-		//if (kData.scanCode['S']) {
-		//	Y++;
-		//	g.Change_Anim(0, "trump");
-		//}
-		//else if (kData.scanCode['W']) {
-		//	Y--;
-		//	g.Change_Anim(2, "trump");
-		//}
-		//if (kData.scanCode['D']) {
-		//	X++;
-		//	g.Change_Anim(1, "trump");
-		//}
-		//else if (kData.scanCode['A']) {
-		//	X--;
-		//	g.Change_Anim(3, "trump");
-		//}
-
-		if (cData.isAttached) {
-			if (cData.digitalButtons[HK_DIGITAL_DPAD_DOWN]) {
-				Y++;
-				//g.Change_Anim(0, "trump");
-			}
-			else if (cData.digitalButtons[HK_DIGITAL_DPAD_UP]) {
-				Y--;
-				//g.Change_Anim(2, "trump");
-			}
-			if (cData.digitalButtons[HK_DIGITAL_DPAD_LEFT]) {
-				X--;
-				//g.Change_Anim(3, "trump");
-			}
-			else if (cData.digitalButtons[HK_DIGITAL_DPAD_RIGHT]) {
-				X++;
-				//g.Change_Anim(1, "trump");
-			}
+		if (kData.scanCode['S']) {
+			Y++;
 		}
-		g.Draw_Sprite("player", X, Y);
-		if (X < xRange.upper && X > xRange.lower) {
-			rRumble = 65535;
+		else if (kData.scanCode['W']) {
+			Y--;
 		}
-		else {
-			rRumble = 0;
+		if (kData.scanCode['D']) {
+			X++;
 		}
-		if (Y < yRange.upper && Y > yRange.lower) {
-			lRumble = 65535;
-		}
-		else {
-			lRumble = 0;
+		else if (kData.scanCode['A']) {
+			X--;
 		}
 
-		HAPI.SetControllerRumble(0, lRumble, rRumble);
+		g.Draw_Sprite("line", X, Y);
 
+		// // Controller data
+		//if (cData.isAttached) {
+		//	if (cData.digitalButtons[HK_DIGITAL_DPAD_DOWN]) {
+		//		Y++;
+		//		//g.Change_Anim(0, "trump");
+		//	}
+		//	else if (cData.digitalButtons[HK_DIGITAL_DPAD_UP]) {
+		//		Y--;
+		//		//g.Change_Anim(2, "trump");
+		//	}
+		//	if (cData.digitalButtons[HK_DIGITAL_DPAD_LEFT]) {
+		//		X--;
+		//		//g.Change_Anim(3, "trump");
+		//	}
+		//	else if (cData.digitalButtons[HK_DIGITAL_DPAD_RIGHT]) {
+		//		X++;
+		//		//g.Change_Anim(1, "trump");
+		//	}
+		//}
 		
+		//if (X < xRange.upper && X > xRange.lower) {
+		//	rRumble = 65535;
+		//}
+		//else {
+		//	rRumble = 0;
+		//}
+		//if (Y < yRange.upper && Y > yRange.lower) {
+		//	lRumble = 65535;
+		//}
+		//else {
+		//	lRumble = 0;
+		//}
 
+		//HAPI.SetControllerRumble(0, lRumble, rRumble);
 	}
 	return;
 }
