@@ -19,7 +19,7 @@
 */
 // Include the HAPI header to get access to all of HAPIs interfaces
 #include <HAPI_lib.h>
-#include "classes\graphics\Graphics.h"
+#include "classes\graphics\Graphics.hpp"
 // HAPI itself is wrapped in the HAPISPACE namespace
 using namespace HAPISPACE;
 
@@ -61,14 +61,6 @@ void HAPI_Main()
 
 	Graphics g(width, height, screen);
 
-	if (!g.Create_Sprite("Data\\alphaThing.tga", "playerSprite", 64, 64)) {
-		HAPI.UserMessage("Sprite loading failed", "Error");
-		return;
-	}
-
-	if (!g.Create_Anim_Sprite("Data\\trump_run.png", "trump", 1536, 1024, 256, 256, 6, 1)) {
-		return;
-	}
 
 	HAPI.SetShowFPS(true);
 
@@ -97,19 +89,19 @@ void HAPI_Main()
 		if (cData.isAttached) {
 			if (cData.digitalButtons[HK_DIGITAL_DPAD_DOWN]) {
 				Y++;
-				g.Change_Anim(0, "trump");
+				//g.Change_Anim(0, "trump");
 			}
 			else if (cData.digitalButtons[HK_DIGITAL_DPAD_UP]) {
 				Y--;
-				g.Change_Anim(2, "trump");
+				//g.Change_Anim(2, "trump");
 			}
 			if (cData.digitalButtons[HK_DIGITAL_DPAD_LEFT]) {
 				X--;
-				g.Change_Anim(3, "trump");
+				//g.Change_Anim(3, "trump");
 			}
 			else if (cData.digitalButtons[HK_DIGITAL_DPAD_RIGHT]) {
 				X++;
-				g.Change_Anim(1, "trump");
+				//g.Change_Anim(1, "trump");
 			}
 		}
 
@@ -129,17 +121,7 @@ void HAPI_Main()
 		HAPI.SetControllerRumble(0, lRumble, rRumble);
 
 		g.Clear_Screen(0);
-		//if (!g.Draw_Sprite("playerSprite", X, Y)) {
-		//	HAPI.UserMessage("Sprite drawing failed", "Error");
-		//	return;
-		//}
-		//for (int i{ 0 }; i < 500; i++) {
-		//	g.Draw_Sprite("trump", i, i);
-		//	for (int u{ 500 }; u < 0; u--) {
-		//		g.Draw_Sprite("trump", u, u);
-		//	}
-		//}
-		g.Draw_Sprite("trump", X, Y);
+
 	}
 	return;
 }
