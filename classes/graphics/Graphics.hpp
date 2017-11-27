@@ -14,10 +14,12 @@ class Graphics
 {
 public:
 	//Creates graphics instance to colour in the main window
-	Graphics(int windowWidth, int windowHeight, BYTE *screenPointer);
+	Graphics();
 	//Destructor for graphics class, deletes itself and all sprites loaded using the class instance
 	~Graphics();
 
+	//Initialiser function, to be called from World upon world init
+	void Init_Graphics(int screenWidth, int screenHeight, BYTE* screenPtr);
 	//Clear screen to grayscale
 	void Clear_Screen(int grayScale);
 	//Clear screen to colour using r, g, b values
@@ -40,8 +42,8 @@ public:
 protected:
 
 private:
-	const int wWidth_, wHeight_;
-	BYTE *startOfScreen_;
+	int wWidth_, wHeight_;
+	BYTE* startOfScreen_;
 	std::unordered_map<std::string, Sprite*> spriteMap_;
 	Rectangle screenRect_;
 };

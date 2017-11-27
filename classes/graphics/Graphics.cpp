@@ -6,11 +6,9 @@
 #include <algorithm>
 #include <cassert>
 
-Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer) :
-	wWidth_(windowWidth), wHeight_(windowHeight), startOfScreen_(screenPointer), screenRect_(windowWidth, windowHeight)
+Graphics::Graphics() : startOfScreen_(nullptr), screenRect_(0, 0)
 {
-	assert(screenPointer);
-	//Enforce no nullpointer, no negative dimensions
+	
 }
 
 Graphics::~Graphics()
@@ -18,6 +16,16 @@ Graphics::~Graphics()
 	for (auto p : spriteMap_) {
 		delete p.second;
 	}
+}
+
+void Graphics::Init_Graphics(int screenWidth, int screenHeight, BYTE* screenPtr)
+{
+	assert(screenPtr != nullptr);
+	wWidth_ = screenWidth;
+	wHeight_ = screenHeight;
+	startOfScreen_ = screenPtr;
+	screenRect_.Set_Width(screenWidth);
+	screenRect_.Set_Height(screenHeight);
 }
 
 void Graphics::Clear_Screen(int grayScale)

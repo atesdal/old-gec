@@ -19,7 +19,7 @@
 */
 // Include the HAPI header to get access to all of HAPIs interfaces
 #include <HAPI_lib.h>
-#include "classes\graphics\Graphics.hpp"
+#include "classes\world\World.hpp"
 // HAPI itself is wrapped in the HAPISPACE namespace
 using namespace HAPISPACE;
 
@@ -51,81 +51,20 @@ void HAPI_Main()
 	HAPI_TControllerData cData;
 	HAPI_TKeyboardData kData;
 
-	HAPI.ChangeFont("Arial");
-
-	if (!HAPI.Initialise(width, height, "Feeling happi")) {
+	World w;
+	if (!w.Init_World(1500, 600)) {
 		return;
 	}
+	w.Run();
 
-	BYTE *screen = HAPI.GetScreenPointer();
+	
+	//if (!HAPI.Initialise(width, height, "Feeling happi")) {
+	//	return;
+	//}
 
-	Graphics g(width, height, screen);
+	//BYTE *screen = HAPI.GetScreenPointer();
 
-	//g.Create_Static_Sprite("Data\\alphaThing.tga", "player", 64, 64);
-	g.Create_Anim_Sprite("Data\\linetest.png", "line", 1536, 256, 6);
+	//Graphics g(width, height, screen);
 
-	HAPI.SetShowFPS(true);
-
-	while (HAPI.Update()) {
-		// // // // // // //
-		// KEEP THIS HERE //
-		// // // // // // //
-		g.Clear_Screen(0);
-
-
-
-		kData = HAPI.GetKeyboardData();
-		cData = HAPI.GetControllerData(0);
-
-		if (kData.scanCode['S']) {
-			Y++;
-		}
-		else if (kData.scanCode['W']) {
-			Y--;
-		}
-		if (kData.scanCode['D']) {
-			X++;
-		}
-		else if (kData.scanCode['A']) {
-			X--;
-		}
-
-		g.Draw_Sprite("line", X, Y);
-
-		// // Controller data
-		//if (cData.isAttached) {
-		//	if (cData.digitalButtons[HK_DIGITAL_DPAD_DOWN]) {
-		//		Y++;
-		//		//g.Change_Anim(0, "trump");
-		//	}
-		//	else if (cData.digitalButtons[HK_DIGITAL_DPAD_UP]) {
-		//		Y--;
-		//		//g.Change_Anim(2, "trump");
-		//	}
-		//	if (cData.digitalButtons[HK_DIGITAL_DPAD_LEFT]) {
-		//		X--;
-		//		//g.Change_Anim(3, "trump");
-		//	}
-		//	else if (cData.digitalButtons[HK_DIGITAL_DPAD_RIGHT]) {
-		//		X++;
-		//		//g.Change_Anim(1, "trump");
-		//	}
-		//}
-		
-		//if (X < xRange.upper && X > xRange.lower) {
-		//	rRumble = 65535;
-		//}
-		//else {
-		//	rRumble = 0;
-		//}
-		//if (Y < yRange.upper && Y > yRange.lower) {
-		//	lRumble = 65535;
-		//}
-		//else {
-		//	lRumble = 0;
-		//}
-
-		//HAPI.SetControllerRumble(0, lRumble, rRumble);
-	}
 	return;
 }

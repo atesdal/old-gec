@@ -14,7 +14,7 @@ public:
 
 	Vector2 Get_Pos() const { return pos_; }
 	std::string Get_Sprite() const { return spriteKey_; }
-	virtual void Move_Entity(Vector2 newPos) { pos_ + newPos; }
+	virtual void Move_Entity(Vector2 newPos) { pos_ = newPos; }
 	virtual void Update();
 
 protected:
