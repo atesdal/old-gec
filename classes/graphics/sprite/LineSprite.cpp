@@ -74,6 +74,7 @@ void LineSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int po
 				drawPntr += endIncrementT;
 			}
 		}
+		std::cout << frameNum_ << std::endl;
 		if (frameNum_ < numFrames_ && loopCounter_ <= numLoops_) {
 			frameNum_++;
 		}
