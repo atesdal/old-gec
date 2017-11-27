@@ -177,6 +177,6 @@ bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY) co
 	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
 		return false;
 	}
-	spriteMap_.at(spriteName)->Render(startOfScreen_, screenRect_, posX, posY, true);
+	spriteMap_.at(spriteName)->Render(startOfScreen_, screenRect_, posX, posY);
 	return true;
 }

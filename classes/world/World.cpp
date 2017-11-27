@@ -38,8 +38,8 @@ void World::Run()
 	HAPI_TKeyboardData kData;
 	HAPI_TControllerData cData;
 	int X, Y;
-	X = 50;
-	Y = 50;
+	X = 98;
+	Y = -105;
 
 	
 	
