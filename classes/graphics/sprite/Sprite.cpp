@@ -25,6 +25,11 @@ void Sprite::Set_Loop(int amount)
 	HAPI.UserMessage("Sprites of this type cannot loop.", "Error");
 }
 
+void Sprite::Reset_Loop()
+{
+	HAPI.UserMessage("Sprites of this type cannot loop.", "Error");
+}
+
 void Sprite::Alpha_Blit(BYTE *currSPtr, BYTE *currTPtr)
 {
 	BYTE alpha = currTPtr[3];

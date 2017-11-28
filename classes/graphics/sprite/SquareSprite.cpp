@@ -18,8 +18,6 @@ void SquareSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int 
 	assert(screenPtr != nullptr);
 	BYTE *scrPtr{ screenPtr };
 	BYTE *drawPntr{ tPntr_ };
-	DWORD time = HAPI.GetTime();
-	int frametime{ 1000 };
 
 	Rectangle tRect(frameRect_);
 
@@ -162,6 +160,13 @@ void SquareSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int 
 	}
 }
 
+void SquareSprite::Reset_Loop()
+{
+	loopCounter_ = 0;
+}
+
 void SquareSprite::Set_Loop(int amount)
 {
+	assert(amount >= 0);
+	numLoops_ = amount;
 }

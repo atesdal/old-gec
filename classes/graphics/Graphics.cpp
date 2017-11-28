@@ -3,6 +3,7 @@
 #include "sprite\StaticSprite.hpp"
 #include "sprite\LineSprite.hpp"
 #include "sprite\SquareSprite.hpp"
+#include "..\Vector2.hpp"
 #include <algorithm>
 #include <cassert>
 
@@ -172,11 +173,29 @@ bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string
 	return false;
 }
 
-bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY) const
+bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY, bool forceNonAlpha) const
 {
 	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
 		return false;
 	}
-	spriteMap_.at(spriteName)->Render(startOfScreen_, screenRect_, posX, posY);
+	spriteMap_.at(spriteName)->Render(startOfScreen_, screenRect_, posX, posY, forceNonAlpha);
+	return true;
+}
+
+bool Graphics::Reset_Sprite_Loop(std::string & spriteName)
+{
+	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
+		return false;
+	}
+	spriteMap_.at(spriteName)->Reset_Loop();
+	return true;
+}
+
+bool Graphics::Set_Sprite_Loop(std::string & spriteName, int amount)
+{
+	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
+		return false;
+	}
+	spriteMap_.at(spriteName)->Set_Loop(amount);
 	return true;
 }

@@ -1,4 +1,5 @@
 #include "StaticSprite.hpp"
+#include "..\..\Vector2.hpp"
 
 StaticSprite::StaticSprite(int textureWidth, int textureHeight, std::string path) : 
 	Sprite(textureWidth, textureHeight, path)
@@ -11,7 +12,7 @@ StaticSprite::~StaticSprite()
 	delete[] tPntr_;
 }
 
-void StaticSprite::Render(BYTE *screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
+void StaticSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
 {
 	if (screenPtr == nullptr) {
 		HAPI.UserMessage("Nullptr errror(Fast_Blit)", "Error");

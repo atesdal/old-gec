@@ -5,10 +5,12 @@ using namespace HAPISPACE;
 
 #include <unordered_map>
 #include "../graphics/rectangle/Rectangle.hpp"
+
 class Sprite;
 class SquareSprite;
 class LineSprite;
 class StaticSprite;
+class Vector2;
 
 class Graphics
 {
@@ -24,20 +26,24 @@ public:
 	void Clear_Screen(int grayScale);
 	//Clear screen to colour using r, g, b values
 	void Clear_Screen(HAPI_TColour screenColour);
-	//Colours pixel(s) in a square shape (grayscale) determined by width and height in top left corner
+	//[DEPRACATED] Colours pixel(s) in a square shape (grayscale) determined by width and height in top left corner
 	bool Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale);
-	//Colours pixel(s) in a square shape (grayscale) determined by width and height at position (x, y)
+	//[DEPRACATED] Colours pixel(s) in a square shape (grayscale) determined by width and height at position (x, y)
 	bool Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale);
-	//Colours pixel(s) in a square shape (HAPI_TColour) determined by width and height in top left corner
+	//[DEPRACATED] Colours pixel(s) in a square shape (HAPI_TColour) determined by width and height in top left corner
 	bool Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour);
-	//Colours pixel(s) in a square shape (HAPI_TColour) determined by width and height at position (x, y)
+	//[DEPRACATED] Colours pixel(s) in a square shape (HAPI_TColour) determined by width and height at position (x, y)
 	bool Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour);
 	//Load non-animated sprite to unordered map with key = uniqueName
 	bool Create_Static_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height);
 	//Load sprite and adds to unordered map with key = uniqueName, change between line and square sheet layout by adding numRows parameter at the end
 	bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows = 1, int numLoops = 0);
-	//Draw loaded sprite using its key
-	bool Draw_Sprite(const std::string &spriteName, int posX, int posY) const;
+	//Draw loaded sprite using its key, set forceNonAlpha = true if texture does not use alpha
+	bool Draw_Sprite(const std::string &spriteName, int posX, int posY, bool forceNonAlpha = false) const;
+	//Resets an animated sprites loop counter
+	bool Reset_Sprite_Loop(std::string &spriteName);
+	//Sets how many times an animated sprite will loop
+	bool Set_Sprite_Loop(std::string &spriteName, int amount);
 
 protected:
 

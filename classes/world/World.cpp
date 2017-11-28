@@ -27,12 +27,18 @@ bool World::Init_World(int screenWidth, int screenHeight)
 
 	g->Init_Graphics(screenWidth, screenHeight, screen);
 
+	g->Create_Static_Sprite("Data\\alphaThing.tga", "player", 64, 64);
 	g->Create_Anim_Sprite("Data\\linetest.png", "line", 1536, 256, 6);
 	g->Create_Anim_Sprite("Data\\runningcat.png", "square", 1024, 1024, 2, 4);
 
-	Entity *a = new Entity("line");
-	entityVector_.push_back(a);
-
+	for (int i{ 0 }; i < 2; i++) {
+		Entity *a = new Entity("line");
+		Entity *b = new Entity("square");
+		Entity *c = new Entity("player");
+		entityVector_.push_back(a);
+		entityVector_.push_back(b);
+		entityVector_.push_back(c);
+	}
 	return true;
 }
 

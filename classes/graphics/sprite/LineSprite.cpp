@@ -1,5 +1,4 @@
 #include "LineSprite.hpp"
-#include <iostream>
 #include <cassert>
 
 LineSprite::LineSprite(int textureWidth, int textureHeight, std::string path, int frameAmount, int numLoops) :
@@ -154,6 +153,13 @@ void LineSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int po
 	}
 }
 
+void LineSprite::Reset_Loop()
+{
+	loopCounter_ = 0;
+}
+
 void LineSprite::Set_Loop(int amount)
 {
+	assert(amount >= 0);
+	numLoops_ = amount;
 }

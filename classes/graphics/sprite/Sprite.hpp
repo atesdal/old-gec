@@ -5,6 +5,8 @@ using namespace HAPISPACE;
 
 #include "../rectangle/Rectangle.hpp"
 
+class Vector2;
+
 class Sprite
 {
 public:
@@ -19,8 +21,9 @@ public:
 	int Get_Width() const { return tWidth_; }
 	//Loads texture into memory using HAPI.LoadTexture
 	bool Init_Texture();
-	//Draws texture, set forceNonAlpha = true if you know texture does not use alpha
+	//Draws texture, set forceNonAlpha = true know texture does not use alpha
 	virtual void Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha = false) = 0;
+	virtual void Reset_Loop();
 	virtual void Set_Loop(int amount);
 
 protected:

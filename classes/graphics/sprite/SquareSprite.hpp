@@ -9,6 +9,8 @@ public:
 	~SquareSprite();
 
 	void Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha = false) override;
+	//Resets loop counter
+	void Reset_Loop() override;
 	//Sets amount of times animation will loop, 0 = infinite
 	void Set_Loop(int amount) override;
 
