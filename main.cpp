@@ -17,79 +17,42 @@
 
 	Additionally in the top directory there are two batch files for creating a redistributable Demo folder
 */
+
 // Include the HAPI header to get access to all of HAPIs interfaces
 #include <HAPI_lib.h>
-#include "classes\graphics\Graphics.h"
+#include "classes\world\World.hpp"
+
 // HAPI itself is wrapped in the HAPISPACE namespace
 using namespace HAPISPACE;
 
 // Every HAPI program has a HAPI_Main as an entry point
 // When this function exits the program will close down
 
+struct MidRange {
+	int lower, upper;
+};
+
 void HAPI_Main()
 {
 	int width{ 1500 }; //Window width
-	int height{ 1000 }; //Window height
-	int X, Y;
-	X = 50;
-	Y = 50;
-	const HAPI_TMouseData &mData = HAPI.GetMouseData(); //HAPI mouse data
-	HAPI_TKeyboardData kData;
+	int height{ 750 }; //Window height
+	//Insert into world to enable rubmle across the middle
+	//int midX = width / 2;
+	//int midY = height / 2;
+	//MidRange xRange;
+	//xRange.lower = midX - 100;
+	//xRange.upper = midX + 100;
+	//MidRange yRange;
+	//yRange.lower = midY - 100;
+	//yRange.upper = midY + 100;
+	//int rRumble{ 0 };
+	//int lRumble{ 0 };
 
-	HAPI.ChangeFont("Arial");
-
-	if (!HAPI.Initialise(width, height, "Feeling happi")) {
+	World w;
+	if (!w.Init_World(1500, 600)) {
 		return;
 	}
+	w.Run();
 
-	BYTE *screen = HAPI.GetScreenPointer();
-
-	Graphics g(width, height, screen);
-
-	if (!g.Create_Sprite("Data\\alphaThing.tga", "playerSprite", 64, 64)) {
-		HAPI.UserMessage("Sprite loading failed", "Error");
-		return;
-	}
-	if (!g.Create_Sprite("Data\\bckground.tga", "background", 256, 256)) {
-		HAPI.UserMessage("Sprite loading failed", "Error");
-		return;
-	}
-
-	HAPI.SetShowFPS(true);
-
-	while (HAPI.Update()) {
-		kData = HAPI.GetKeyboardData();
-
-		if (kData.scanCode['S']) {
-			Y++;
-		}
-		else if (kData.scanCode['W']) {
-			Y--;
-		}
-		if (kData.scanCode['D']) {
-			X++;
-		}
-		else if (kData.scanCode['A']) {
-			X--;
-		}
-
-		g.Clear_Screen(0);
-
-		if (!g.Draw_Sprite("background", 0, 0)) {
-			HAPI.UserMessage("Sprite drawing failed", "Error");
-			return;
-		}
-
-		//for (int i{ 0 }; i < 1000; i++) {
-			if (!g.Draw_Sprite("playerSprite", X, Y)) {
-				HAPI.UserMessage("Sprite drawing failed", "Error");
-				return;
-			}
-		//}
-
-		/*if (!g.Draw_Sprite("background")) {
-			std::cout << "Draw fail" << std::endl;
-		}*/
-	}
 	return;
 }

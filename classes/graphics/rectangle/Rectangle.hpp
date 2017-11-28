@@ -1,6 +1,7 @@
 #pragma once
-#include <iostream>
+
 #include <algorithm>
+
 class Rectangle
 {
 public:
@@ -28,14 +29,22 @@ public:
 	int Get_Width() const { return (right - left); }
 	//Returns height of rectangle
 	int Get_Height() const { return (bottom - top); }
+	//Sets width of rectangle
+	void Set_Width(int width) { (width < 1) ? right = right : right = width; }
+	//Sets height of rectangle
+	void Set_Height(int height) { (height < 1) ? bottom = bottom : bottom = height; }
+
+	void Translate(int dx, int dy)
+	{
+		left += dx;
+		right += dx;
+		top += dy;
+		bottom += dy;
+	}
 
 	//Changes this instance of rectangle to the intersect value of another rectangle
 	void Clip_To(const Rectangle &other, int posX, int posY)
 	{
-		/*std::cout << "Before min/max" << std::endl << left << " : " << other.left << std::endl
-			<< right << " : " << other.right << std::endl
-			<< top << " : " << other.top << std::endl
-			<< bottom << " : " << other.bottom << std::endl;*/
 		Translate(posX, posY);
 
 		left = std::max(left, other.left);
@@ -73,12 +82,5 @@ public:
 		return false;
 	}
 private:
-	void Translate(int dx, int dy)
-	{
-		left += dx;
-		right += dx;
-		top += dy;
-		bottom += dy;
-	}
 	int left, right, top, bottom;
 };

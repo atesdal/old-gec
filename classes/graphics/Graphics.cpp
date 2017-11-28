@@ -1,29 +1,47 @@
-#include "Graphics.h"
+#include "Graphics.hpp"
+#include "sprite\Sprite.hpp"
+#include "sprite\StaticSprite.hpp"
+#include "sprite\LineSprite.hpp"
+#include "sprite\SquareSprite.hpp"
+#include "..\Vector2.hpp"
+#include <algorithm>
+#include <cassert>
 
-Graphics::Graphics(int windowWidth, int windowHeight, BYTE *screenPointer) :
-	wWidth(windowWidth), wHeight(windowHeight), startOfScreen(screenPointer),
-	screenRect(windowWidth, windowHeight)
+Graphics::Graphics() : startOfScreen_(nullptr), screenRect_(0, 0)
 {
-
+	
 }
 
 Graphics::~Graphics()
 {
-	for (auto p : spriteMap) {
+	for (auto p : spriteMap_) {
 		delete p.second;
 	}
 }
 
-void Graphics::Clear_Screen(int grayScale)
+void Graphics::Init_Graphics(int screenWidth, int screenHeight, BYTE* screenPtr)
 {
-	memset(startOfScreen, grayScale, (wWidth * wHeight * 4));
+	assert(screenPtr != nullptr);
+	wWidth_ = screenWidth;
+	wHeight_ = screenHeight;
+	startOfScreen_ = screenPtr;
+	screenRect_.Set_Width(screenWidth);
+	screenRect_.Set_Height(screenHeight);
 }
 
-void Graphics::Clear_Screen(int r, int g, int b)
+void Graphics::Clear_Screen(int grayScale)
 {
-	BYTE *scrPntr = startOfScreen;
-	HAPI_TColour col = HAPI_TColour(r, g, b, 0);
-	for (int i{ 0 }; i < (wWidth * wHeight); i++) {
+	if (grayScale < 0 || grayScale > 255) {
+		std::cout << "Clear_Screen(grayScale) out of bounds, check values!" << std::endl;
+	}
+	memset(startOfScreen_, std::max(0, std::min(255, grayScale)), (wWidth_ * wHeight_ * 4));
+}
+
+void Graphics::Clear_Screen(HAPI_TColour screenColour)
+{
+	BYTE *scrPntr = startOfScreen_;
+	HAPI_TColour col = screenColour;
+	for (int i{ 0 }; i < (wWidth_ * wHeight_); i++) {
 		memcpy(scrPntr, &col, sizeof(HAPI_TColour));
 		scrPntr += sizeof(HAPI_TColour);
 	}
@@ -31,11 +49,14 @@ void Graphics::Clear_Screen(int r, int g, int b)
 
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
 {
-	if (shapeWidth > wWidth || shapeHeight > wHeight) { return false; }
+	if (shapeWidth > wWidth_ || shapeHeight > wHeight_) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale))", "Error");
+		return false;
+	}
 
-	BYTE *scrPntr = startOfScreen;
+	BYTE *scrPntr = startOfScreen_;
 
-	int endIncrement = wWidth * 4;
+	int endIncrement = wWidth_ * 4;
 	for (int h{ 0 }; h < shapeHeight; h++) {
 		memset(scrPntr, grayScale, (sizeof(HAPI_TColour) * shapeWidth));
 		scrPntr += endIncrement;
@@ -45,88 +66,136 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
 
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale)
 {
-	if ((shapeWidth + posX) > wWidth || posX < 0) { return false; } //Checks that pixels can be drawn in X-direction
-	else if ((shapeHeight + posY) > wHeight || posY < 0) { return false; } // and Y-direction
+	if ((shapeWidth + posX) > wWidth_ || posX < 0) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale))", "Error");
+		return false; 
+	}
+	else if ((shapeHeight + posY) > wHeight_ || posY < 0) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale))", "Error");
+		return false; } // and Y-direction
 
-	int endIncrement = wWidth * 4;
-	int startByte = (posX + (posY * wWidth)) * 4;
+	int endIncrement = wWidth_ * 4;
+	int startByte = (posX + (posY * wWidth_)) * 4;
 
-	BYTE *scrPntr = startOfScreen;
+	BYTE *scrPntr = startOfScreen_;
 	scrPntr += startByte; //Sets screen pointer to original writing position
 
-	for (int h{ startByte }; h < (wWidth * shapeHeight * 4) + startByte; h += endIncrement) {
+	for (int h{ startByte }; h < (wWidth_ * shapeHeight * 4) + startByte; h += endIncrement) {
 		memset(scrPntr, grayScale, (sizeof(HAPI_TColour) * shapeWidth));
 		scrPntr += endIncrement;
 	}
 	return true;
 }
 
-// Needs updating to double for-loop //
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour)
 {
-	if (shapeWidth > wWidth || shapeHeight > wHeight) { return false; }
+	if (shapeWidth > wWidth_ || shapeHeight > wHeight_) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour))", "Error");
+		return false;
+	}
 
-	BYTE *scrPntr = startOfScreen;
-	int endIncrement = (wWidth - (shapeWidth - 1)) * 4;
+	BYTE *scrPntr = startOfScreen_;
+	int endIncrement = (wWidth_ - shapeWidth) * 4;
 
-	for (int h{ 1 }; h <= (shapeHeight * shapeWidth); h++) {
-		if (h % shapeWidth == 0) {
-			memcpy(scrPntr, &shapeColour, sizeof(HAPI_TColour));
-			scrPntr += endIncrement;
-		}
-		else {
+	for (int h{ 0 }; h < shapeHeight; h++) {
+		for (int w{ 0 }; w < shapeWidth; w++) {
 			memcpy(scrPntr, &shapeColour, sizeof(HAPI_TColour));
 			scrPntr += sizeof(HAPI_TColour);
 		}
+		scrPntr += endIncrement;
 	}
 	return true;
 }
 
-// Needs updating to double for-loop //
 bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour)
 {
-	if ((shapeWidth + posX) > wWidth || posX < 0) { return false; } //Checks that pixels can be drawn in X-direction
-	else if ((shapeHeight + posY) > wHeight || posY < 0) { return false; } // and Y-direction
+	if ((shapeWidth + posX) > wWidth_ || posX < 0) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour))", "Error");
+		return false;
+	} 
+	else if ((shapeHeight + posY) > wHeight_ || posY < 0) {
+		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour))", "Error");
+		return false;
+	}
 
-	int endIncrement = (wWidth - (shapeWidth - 1)) * 4;
+	int endIncrement = (wWidth_ - shapeWidth) * 4;
+	int startByte = (posX + (posY * wWidth_)) * 4;
 
-	int startByte = (posX + (posY * wWidth)) * 4;
-
-	BYTE *scrPntr = startOfScreen;
+	BYTE *scrPntr = startOfScreen_;
 	scrPntr += startByte; //Sets screen pointer to original writing position
 
-	for (int h{ startByte }; h < (shapeHeight * shapeWidth) + startByte; h++) {
-		memcpy(scrPntr, &shapeColour, sizeof(HAPI_TColour));
-		if ((h - startByte + 1) % shapeWidth == 0) {
-			scrPntr += endIncrement;
-		}
-		else {
+	for (int h{ startByte }; h < shapeHeight + startByte; h++) {
+		for (int w{ 0 }; w < shapeWidth; w++) {
+			memcpy(scrPntr, &shapeColour, sizeof(HAPI_TColour));
 			scrPntr += sizeof(HAPI_TColour);
 		}
+		scrPntr += endIncrement;
 	}
 	return true;
 }
 
-bool Graphics::Create_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height)
+bool Graphics::Create_Static_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height)
 {
-	if (spriteMap.find(uniqueName) == spriteMap.end()) {
-		Sprite *a = new Sprite(width, height, fileName);
+	if (spriteMap_.find(uniqueName) == spriteMap_.end()) {
+		StaticSprite *a = new StaticSprite(width, height, fileName);
 		if (!a->Init_Texture()) {
 			delete a;
 			return false;
 		}
-		spriteMap[uniqueName] = a;
-		std::cout << spriteMap.at(uniqueName)->Get_Height();
+		spriteMap_[uniqueName] = a;
 		return true;
 	}
 	return false;
 }
 
-bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY) const
+bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows, int numLoops)
 {
-	if (spriteMap.find(spriteName) == spriteMap.end()) {
+	if (spriteMap_.find(uniqueName) == spriteMap_.end()) {
+		if (numRows != 1) {
+			SquareSprite *a = new SquareSprite(width, height, fileName, numFrames, numRows, numLoops);
+			if (!a->Init_Texture()) {
+				delete a;
+				return false;
+			}
+			spriteMap_[uniqueName] = a;
+			return true;
+		}
+		else {
+			LineSprite *a = new LineSprite(width, height, fileName, numFrames, numLoops);
+			if (!a->Init_Texture()) {
+				delete a;
+				return false;
+			}
+			spriteMap_[uniqueName] = a;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY, bool forceNonAlpha) const
+{
+	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
 		return false;
 	}
-	spriteMap.at(spriteName)->Alpha_Blit(startOfScreen, posX, posY, screenRect);
+	spriteMap_.at(spriteName)->Render(startOfScreen_, screenRect_, posX, posY, forceNonAlpha);
+	return true;
+}
+
+bool Graphics::Reset_Sprite_Loop(std::string & spriteName)
+{
+	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
+		return false;
+	}
+	spriteMap_.at(spriteName)->Reset_Loop();
+	return true;
+}
+
+bool Graphics::Set_Sprite_Loop(std::string & spriteName, int amount)
+{
+	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
+		return false;
+	}
+	spriteMap_.at(spriteName)->Set_Loop(amount);
 	return true;
 }
