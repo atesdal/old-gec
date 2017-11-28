@@ -11,6 +11,9 @@ World::World()
 World::~World()
 {
 	delete g;
+	for (auto p : entityVector_) {
+		delete p;
+	}
 }
 
 bool World::Init_World(int screenWidth, int screenHeight)
@@ -25,6 +28,7 @@ bool World::Init_World(int screenWidth, int screenHeight)
 	g->Init_Graphics(screenWidth, screenHeight, screen);
 
 	g->Create_Anim_Sprite("Data\\linetest.png", "line", 1536, 256, 6);
+	g->Create_Anim_Sprite("Data\\runningcat.png", "square", 1024, 1024, 2, 4);
 
 	Entity *a = new Entity("line");
 	entityVector_.push_back(a);
@@ -40,8 +44,6 @@ void World::Run()
 	int X, Y;
 	X = 98;
 	Y = -105;
-
-	
 	
 	while (HAPI.Update()) {
 		// // // // // // //

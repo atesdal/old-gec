@@ -26,7 +26,6 @@ void LineSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int po
 	tRect.Clip_To(dest, posX, posY);
 
 	tRect.Translate(frameRect_.Get_Width() * frameNum_, 0);
-
 	
 	//Allows user to prevent function from checking alpha values, use if you know texture does not use alpha channels
 	if (forceNonAlpha) {
@@ -142,14 +141,15 @@ void LineSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int po
 			}
 		}
 	}
-
-	if (frameNum_ < numFrames_ && loopCounter_ <= numLoops_) {
-		frameNum_++;
-	}
-	else {
-		frameNum_ = 0;
-		if (numLoops_ != 0) {
-			loopCounter_++;
+	if (loopCounter_ <= numLoops_) {
+		if (frameNum_ < (numFrames_ - 1)) {
+			frameNum_++;
+		}
+		else {
+			frameNum_ = 0;
+			if (numLoops_ != 0) {
+				loopCounter_++;
+			}
 		}
 	}
 }
