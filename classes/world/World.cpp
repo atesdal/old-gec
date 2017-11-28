@@ -32,11 +32,11 @@ bool World::Init_World(int screenWidth, int screenHeight)
 	g->Create_Anim_Sprite("Data\\runningcat.png", "square", 1024, 1024, 2, 4);
 
 	for (int i{ 0 }; i < 2; i++) {
-		Entity *a = new Entity("line");
-		Entity *b = new Entity("square");
+		//Entity *a = new Entity("line");
+		//Entity *b = new Entity("square");
 		Entity *c = new Entity("player");
-		entityVector_.push_back(a);
-		entityVector_.push_back(b);
+		//entityVector_.push_back(a);
+		//entityVector_.push_back(b);
 		entityVector_.push_back(c);
 	}
 	return true;

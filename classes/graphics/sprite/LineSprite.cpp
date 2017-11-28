@@ -1,10 +1,12 @@
 #include "LineSprite.hpp"
+#include "..\..\utils\Utilities.hpp"
 #include <cassert>
 
-LineSprite::LineSprite(int textureWidth, int textureHeight, std::string path, int frameAmount, int numLoops) :
-	Sprite(textureWidth, textureHeight, path), frameNum_(0), numFrames_(frameAmount), numLoops_(numLoops), loopCounter_(0)
+LineSprite::LineSprite(int textureWidth, int textureHeight, std::string path, int frameAmount, DWORD frameTimeMS, int numLoops) :
+	Sprite(textureWidth, textureHeight, path), frameNum_(0), numFrames_(frameAmount), numLoops_(numLoops), loopCounter_(0), frameDelay_(frameTimeMS)
 {
 	frameRect_.Set_Width(textureWidth / numFrames_);
+	lastUpdate_ = HAPI.GetTime();
 }
 
 LineSprite::~LineSprite()
@@ -12,13 +14,11 @@ LineSprite::~LineSprite()
 	delete[] tPntr_;
 }
 
-void LineSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
+void LineSprite::Render(BYTE *screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
 {
 	assert(screenPtr != nullptr);
 	BYTE *scrPtr{ screenPtr };
 	BYTE *drawPntr{ tPntr_ };
-	DWORD time = HAPI.GetTime();
-	int frametime{ 1000 };
 
 	Rectangle tRect(frameRect_);
 
@@ -55,7 +55,7 @@ void LineSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int po
 		else {
 			//Screen increment and startbyte
 			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (std::max(0, posX) + (std::max(0, posY) * dest.Get_Width())) * 4;
+			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest.Get_Width())) * 4;
 			scrPtr += startByte;
 
 			//Texture increment and startbyte
@@ -112,7 +112,7 @@ void LineSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int po
 		else {
 			//Screen increment and startbyte
 			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (std::max(0, posX) + (std::max(0, posY) * dest.Get_Width())) * 4;
+			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest.Get_Width())) * 4;
 			scrPtr += startByte;
 
 			//Texture increment and startbyte
@@ -140,16 +140,19 @@ void LineSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int po
 			}
 		}
 	}
-	if (loopCounter_ <= numLoops_) {
-		if (frameNum_ < (numFrames_ - 1)) {
-			frameNum_++;
-		}
-		else {
-			frameNum_ = 0;
-			if (numLoops_ != 0) {
-				loopCounter_++;
+	if (HAPI.GetTime() - lastUpdate_ >= frameDelay_) {
+		if (loopCounter_ <= numLoops_) {
+			if (frameNum_ < (numFrames_ - 1)) {
+				frameNum_++;
+			}
+			else {
+				frameNum_ = 0;
+				if (numLoops_ != 0) {
+					loopCounter_++;
+				}
 			}
 		}
+		lastUpdate_ = HAPI.GetTime();
 	}
 }
 

@@ -4,12 +4,12 @@
 using namespace HAPISPACE;
 
 #include <unordered_map>
-#include "../graphics/rectangle/Rectangle.hpp"
+#include "..\utils\Rectangle.hpp"
 
 class Sprite;
-class SquareSprite;
-class LineSprite;
 class StaticSprite;
+class LineSprite;
+class SquareSprite;
 class Vector2;
 
 class Graphics
@@ -37,7 +37,7 @@ public:
 	//Load non-animated sprite to unordered map with key = uniqueName
 	bool Create_Static_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height);
 	//Load sprite and adds to unordered map with key = uniqueName, change between line and square sheet layout by adding numRows parameter at the end
-	bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows = 1, int numLoops = 0);
+	bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows = 1, DWORD frameTimeMS = 100, int numLoops = 0);
 	//Draw loaded sprite using its key, set forceNonAlpha = true if texture does not use alpha
 	bool Draw_Sprite(const std::string &spriteName, int posX, int posY, bool forceNonAlpha = false) const;
 	//Resets an animated sprites loop counter

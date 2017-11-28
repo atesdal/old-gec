@@ -1,10 +1,11 @@
 #include "StaticSprite.hpp"
-#include "..\..\Vector2.hpp"
+#include "..\..\utils\Utilities.hpp"
+//TODO get asserts
 
 StaticSprite::StaticSprite(int textureWidth, int textureHeight, std::string path) : 
 	Sprite(textureWidth, textureHeight, path)
 {
-
+	
 }
 
 StaticSprite::~StaticSprite()
@@ -12,12 +13,13 @@ StaticSprite::~StaticSprite()
 	delete[] tPntr_;
 }
 
-void StaticSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
+void StaticSprite::Render(BYTE *screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
 {
 	if (screenPtr == nullptr) {
 		HAPI.UserMessage("Nullptr errror(Fast_Blit)", "Error");
 		return;
 	}
+
 	BYTE *scrPtr{ screenPtr };
 	BYTE *drawPntr{ tPntr_ };
 
@@ -46,7 +48,7 @@ void StaticSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int 
 		else {
 			//Screen increment and startbyte
 			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (std::max(0, posX) + (std::max(0, posY) * dest.Get_Width())) * 4;
+			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest.Get_Width())) * 4;
 
 			//Texture increment and startbyte
 			int endIncrementT = (tWidth_ - tRect.Get_Width()) * 4;
@@ -102,7 +104,7 @@ void StaticSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int 
 		else {
 			//Screen increment and startbyte
 			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (std::max(0, posX) + (std::max(0, posY) * dest.Get_Width())) * 4;
+			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest.Get_Width())) * 4;
 
 			//Texture increment and startbyte
 			int endIncrementT = (tWidth_ - tRect.Get_Width()) * 4;

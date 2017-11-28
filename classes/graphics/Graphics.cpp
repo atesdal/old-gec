@@ -3,8 +3,7 @@
 #include "sprite\StaticSprite.hpp"
 #include "sprite\LineSprite.hpp"
 #include "sprite\SquareSprite.hpp"
-#include "..\Vector2.hpp"
-#include <algorithm>
+#include "..\utils\Utilities.hpp"
 #include <cassert>
 
 Graphics::Graphics() : startOfScreen_(nullptr), screenRect_(0, 0)
@@ -34,7 +33,7 @@ void Graphics::Clear_Screen(int grayScale)
 	if (grayScale < 0 || grayScale > 255) {
 		std::cout << "Clear_Screen(grayScale) out of bounds, check values!" << std::endl;
 	}
-	memset(startOfScreen_, std::max(0, std::min(255, grayScale)), (wWidth_ * wHeight_ * 4));
+	memset(startOfScreen_, Util::Max(0, Util::Min(255, grayScale)), (wWidth_ * wHeight_ * 4));
 }
 
 void Graphics::Clear_Screen(HAPI_TColour screenColour)
@@ -148,11 +147,11 @@ bool Graphics::Create_Static_Sprite(const std::string &fileName, const std::stri
 	return false;
 }
 
-bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows, int numLoops)
+bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows, DWORD frameTimeMS, int numLoops)
 {
 	if (spriteMap_.find(uniqueName) == spriteMap_.end()) {
 		if (numRows != 1) {
-			SquareSprite *a = new SquareSprite(width, height, fileName, numFrames, numRows, numLoops);
+			SquareSprite *a = new SquareSprite(width, height, fileName, numFrames, numRows, frameTimeMS, numLoops);
 			if (!a->Init_Texture()) {
 				delete a;
 				return false;
@@ -161,7 +160,7 @@ bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string
 			return true;
 		}
 		else {
-			LineSprite *a = new LineSprite(width, height, fileName, numFrames, numLoops);
+			LineSprite *a = new LineSprite(width, height, fileName, numFrames, frameTimeMS, numLoops);
 			if (!a->Init_Texture()) {
 				delete a;
 				return false;

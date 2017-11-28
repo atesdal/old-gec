@@ -3,7 +3,7 @@
 Sprite::Sprite(int textureWidth, int textureHeight, std::string path) :
 	tWidth_(textureWidth), tHeight_(textureHeight), tPath_(path), tPntr_(nullptr), frameRect_(textureWidth, textureHeight)
 {
-	
+
 }
 
 Sprite::~Sprite()

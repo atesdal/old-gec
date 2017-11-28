@@ -1,9 +1,9 @@
 #pragma once
 
-#include<HAPI_lib.h>
-using namespace HAPISPACE;
+#include <HAPI_lib.h>
+#include "..\..\utils\Rectangle.hpp"
 
-#include "../rectangle/Rectangle.hpp"
+using namespace HAPISPACE;
 
 class Vector2;
 
@@ -22,8 +22,10 @@ public:
 	//Loads texture into memory using HAPI.LoadTexture
 	bool Init_Texture();
 	//Draws texture, set forceNonAlpha = true know texture does not use alpha
-	virtual void Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha = false) = 0;
+	virtual void Render(BYTE *screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha = false) = 0;
+	//Resets loop counter
 	virtual void Reset_Loop();
+	//Sets amount of times animation will loop, 0 = infinite
 	virtual void Set_Loop(int amount);
 
 protected:
