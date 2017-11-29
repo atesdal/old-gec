@@ -11,7 +11,7 @@ StaticSprite::StaticSprite(int textureWidth, int textureHeight, std::string path
 
 StaticSprite::~StaticSprite()
 {
-	delete[] tPntr_;
+
 }
 
 void StaticSprite::Render(BYTE *screenPtr, const Util::Rectangle *dest, int posX, int posY, bool forceNonAlpha)

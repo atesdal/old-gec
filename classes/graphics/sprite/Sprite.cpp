@@ -10,6 +10,7 @@ Sprite::Sprite(int textureWidth, int textureHeight, std::string path) :
 Sprite::~Sprite()
 {
 	delete frameRect_;
+	delete[] tPntr_;
 }
 
 bool Sprite::Init_Texture()

@@ -12,7 +12,7 @@ LineSprite::LineSprite(int textureWidth, int textureHeight, std::string path, in
 
 LineSprite::~LineSprite()
 {
-	delete[] tPntr_;
+
 }
 
 void LineSprite::Render(BYTE *screenPtr, const Util::Rectangle *dest, int posX, int posY, bool forceNonAlpha)
