@@ -1,21 +1,8 @@
 #include "Entity.hpp"
 
-Entity::Entity() : pos_(Vector2(0, 0)), spriteKey_("")
-{
 
-}
-
-Entity::Entity(Vector2 pos) : pos_(pos), spriteKey_("")
-{
-
-}
-
-Entity::Entity(Vector2 pos, std::string spriteKey) : pos_(pos), spriteKey_(spriteKey)
-{
-
-}
-
-Entity::Entity(std::string spriteKey) : pos_(Vector2(0, 0)), spriteKey_(spriteKey)
+Entity::Entity() :
+	spriteKey_(""), pos_(Vector2(0, 0)), isActive_(true), side_(Faction::ENeutral)
 {
 
 }
@@ -25,7 +12,32 @@ Entity::~Entity()
 
 }
 
-void Entity::Update()
+void Entity::Render(GFX::Graphics &gfx)
 {
+	gfx.Draw_Sprite(spriteKey_, pos_);
+}
 
+void Entity::Set_Sprite(std::string newSprite)
+{
+	spriteKey_ = newSprite;
+}
+
+void Entity::Set_Active(bool active)
+{
+	isActive_ = active;
+}
+
+void Entity::Set_Side(Faction side)
+{
+	side_ = side;
+}
+
+bool Entity::operator==(Entity &other) const
+{
+	return (side_ == other.Get_Side()) ? true : false;
+}
+
+bool Entity::operator!=(Entity &other) const
+{
+	return (side_ != other.Get_Side()) ? true : false;
 }

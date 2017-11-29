@@ -1,4 +1,5 @@
 #include "Utilities.hpp"
+#include <sstream>
 
 namespace Util
 {
@@ -20,5 +21,14 @@ namespace Util
 	float Min(float v1, float v2)
 	{
 		return (v1 < v2) ? v1 : v2;
+	}
+
+	std::string Util::To_String(int val)
+	{
+		std::ostringstream ss;
+		std::string s;
+		ss << val;
+		s += ss.str();
+		return s;
 	}
 }

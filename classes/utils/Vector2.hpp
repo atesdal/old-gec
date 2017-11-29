@@ -1,6 +1,6 @@
 #pragma once
 #include <cmath>
-#include <iostream>
+#include <ostream>
 
 class Vector2
 {
@@ -28,9 +28,9 @@ public:
 		return Vector2(x * rhs, y * rhs);
 	}
 
-	std::ostream& operator<<(std::ostream& os)
+	friend std::ostream& operator<<(std::ostream& os, const Vector2& vec)
 	{
-		return os << x << ", " << y;
+		return os << vec.x << ", " << vec.y;
 	}
 
 	float Length() const

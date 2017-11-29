@@ -1,19 +1,34 @@
 #include "World.hpp"
-#include "../../classes/graphics/Graphics.hpp"
-#include "entity/Entity.hpp"
+#include "entity\Entity.hpp"
+#include "entity\Tile.hpp"
+#include "..\utils\Utilities.hpp"
+
+#include <iostream>
 
 World::World()
 {
-	g = new Graphics();
+	g_ = new GFX::Graphics();
 }
 
 
 World::~World()
 {
-	delete g;
+	delete g_;
 	for (auto p : entityVector_) {
 		delete p;
 	}
+	for (auto p : tileVector_) {
+		delete p;
+	}
+	for (auto p : tileMap_) {
+		delete p.second;
+	}
+	//for (auto p : removableMap_) {
+	//	delete p.second;
+	//}
+	//for (auto p : resourceMap_) {
+	//	delete p.second;
+	//}
 }
 
 bool World::Init_World(int screenWidth, int screenHeight)
@@ -25,95 +40,70 @@ bool World::Init_World(int screenWidth, int screenHeight)
 	HAPI.SetShowFPS(true);
 	BYTE *screen = HAPI.GetScreenPointer();
 
-	g->Init_Graphics(screenWidth, screenHeight, screen);
+	g_->Init_Graphics(screenWidth, screenHeight, screen);
 
-	g->Create_Static_Sprite("Data\\alphaThing.tga", "player", 64, 64);
-	g->Create_Anim_Sprite("Data\\linetest.png", "line", 1536, 256, 6);
-	g->Create_Anim_Sprite("Data\\runningcat.png", "square", 1024, 1024, 2, 4);
+	LoadLevel();
+
+	return true;
+}
+
+bool World::LoadLevel()
+{
+	g_->Create_Static_Sprite("Data\\alphaThing.tga", "player", 64, 64);
+	g_->Create_Static_Sprite("Data\\terrain\\grass.jpg", "grassTerrain", 256, 256);
+	g_->Create_Anim_Sprite("Data\\linetest.png", "line", 1536, 256, 6);
+	g_->Create_Anim_Sprite("Data\\runningcat.png", "square", 1024, 1024, 2, 4);
+
+	int tileSize{ 256 };
+
+	Tile *grass = new Tile(2, 0);
+
+	grass->Set_Sprite("grassTerrain");
+
+	tileMap_["grass"] = grass;
 
 	for (int i{ 0 }; i < 2; i++) {
-		//Entity *a = new Entity("line");
-		//Entity *b = new Entity("square");
-		Entity *c = new Entity("player");
-		//entityVector_.push_back(a);
-		//entityVector_.push_back(b);
-		entityVector_.push_back(c);
+		for (int w{ 0 }; w < 2; w++) {
+			Tile *a = new Tile((*tileMap_.at("grass")));
+			a->Move_Entity(Vector2(float(tileSize * w), float(tileSize * i)));
+			tileVector_.push_back(a);
+		}
 	}
+
 	return true;
 }
 
 void World::Run()
 {
-	HAPI_TMouseData mData;
-	HAPI_TKeyboardData kData;
-	HAPI_TControllerData cData;
-	int X, Y;
-	X = 98;
-	Y = -105;
-	
 	while (HAPI.Update()) {
-		// // // // // // //
-		// KEEP THIS HERE //
-		// // // // // // //
-		g->Clear_Screen(0);
-		
-		//Patchwork input gathering
-		mData = HAPI.GetMouseData();
-		kData = HAPI.GetKeyboardData();
-		cData = HAPI.GetControllerData(0);
 
-		if (kData.scanCode['S']) {
-			Y++;
-		}
-		else if (kData.scanCode['W']) {
-			Y--;
-		}
-		if (kData.scanCode['D']) {
-			X++;
-		}
-		else if (kData.scanCode['A']) {
-			X--;
-		}
+		g_->Clear_Screen(0);
+		Update();
+		Render();
+	}
+}
 
-		
-		for (auto p : entityVector_) {
-			p->Move_Entity(Vector2(X, Y));
-			g->Draw_Sprite(p->Get_Sprite(), p->Get_Pos().x, p->Get_Pos().y);
-		}
+void World::Update()
+{
+	for (auto p : tileVector_) {
+		p->Update();
+	}
 
-		// // Controller data
-		//if (cData.isAttached) {
-		//	if (cData.digitalButtons[HK_DIGITAL_DPAD_DOWN]) {
-		//		Y++;
-		//		//g.Change_Anim(0, "trump");
-		//	}
-		//	else if (cData.digitalButtons[HK_DIGITAL_DPAD_UP]) {
-		//		Y--;
-		//		//g.Change_Anim(2, "trump");
-		//	}
-		//	if (cData.digitalButtons[HK_DIGITAL_DPAD_LEFT]) {
-		//		X--;
-		//		//g.Change_Anim(3, "trump");
-		//	}
-		//	else if (cData.digitalButtons[HK_DIGITAL_DPAD_RIGHT]) {
-		//		X++;
-		//		//g.Change_Anim(1, "trump");
-		//	}
-		//}
+	for (auto p : entityVector_) {
+		p->Update();
+	}
+}
 
-		//if (X < xRange.upper && X > xRange.lower) {
-		//	rRumble = 65535;
-		//}
-		//else {
-		//	rRumble = 0;
-		//}
-		//if (Y < yRange.upper && Y > yRange.lower) {
-		//	lRumble = 65535;
-		//}
-		//else {
-		//	lRumble = 0;
-		//}
+void World::Render()
+{
+	for (auto p : tileVector_) {
+		p->Render(*g_);
+		//The text needs to be checked to see whether it is in view or not, or massive performance hit happens
+		HAPI.RenderText(int(p->Get_Pos().x + 6), int(p->Get_Pos().y + 5), HAPI_TColour::WHITE, Util::To_String(p->Get_F_Yield()));
+		HAPI.RenderText(int(p->Get_Pos().x + 5), int(p->Get_Pos().y + 15), HAPI_TColour::WHITE, Util::To_String(p->Get_P_Yield()));
+	}
 
-		//HAPI.SetControllerRumble(0, lRumble, rRumble);
+	for (auto p : entityVector_) {
+		g_->Draw_Sprite(p->Get_Sprite(), p->Get_Pos());
 	}
 }
