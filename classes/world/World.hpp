@@ -2,8 +2,10 @@
 
 #include <vector>
 #include <unordered_map>
-#include "..\graphics\Graphics.hpp"
 
+namespace GFX {
+	class Graphics;
+}
 class Entity;
 class Tile;
 class Removable;

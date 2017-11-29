@@ -1,16 +1,19 @@
 #pragma once
 
 #include <HAPI_lib.h>
+#include <unordered_map>
+
 using namespace HAPISPACE;
 
-#include <unordered_map>
-#include "..\utils\Rectangle.hpp"
-
+namespace Util {
+	class Rectangle;
+	class Vector2;
+}
 class Sprite;
 class StaticSprite;
 class LineSprite;
 class SquareSprite;
-class Vector2;
+
 
 namespace GFX
 {
@@ -41,7 +44,7 @@ namespace GFX
 		//Load sprite and adds to unordered map with key = uniqueName, change between line and square sheet layout by adding numRows parameter at the end
 		bool Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows = 1, DWORD frameTimeMS = 100, int numLoops = 0);
 		//Draw loaded sprite using its key, set forceNonAlpha = true if texture does not use alpha
-		bool Draw_Sprite(const std::string &spriteName, Vector2 pos, bool forceNonAlpha = false) const;
+		bool Draw_Sprite(const std::string &spriteName, Util::Vector2 pos, bool forceNonAlpha = false) const;
 		//Resets an animated sprites loop counter
 		bool Reset_Sprite_Loop(std::string &spriteName);
 		//Sets how many times an animated sprite will loop
@@ -53,6 +56,6 @@ namespace GFX
 		int wWidth_, wHeight_;
 		BYTE* startOfScreen_;
 		std::unordered_map<std::string, Sprite*> spriteMap_;
-		Rectangle screenRect_;
+		Util::Rectangle *screenRect_;
 	};
 }

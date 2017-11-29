@@ -1,11 +1,12 @@
 #include "LineSprite.hpp"
+#include "..\..\utils\Rectangle.hpp"
 #include "..\..\utils\Utilities.hpp"
 #include <cassert>
 
 LineSprite::LineSprite(int textureWidth, int textureHeight, std::string path, int frameAmount, DWORD frameTimeMS, int numLoops) :
 	Sprite(textureWidth, textureHeight, path), frameNum_(0), numFrames_(frameAmount), numLoops_(numLoops), loopCounter_(0), frameDelay_(frameTimeMS)
 {
-	frameRect_.Set_Width(textureWidth / numFrames_);
+	frameRect_->Set_Width(textureWidth / numFrames_);
 	lastUpdate_ = HAPI.GetTime();
 }
 
@@ -14,27 +15,27 @@ LineSprite::~LineSprite()
 	delete[] tPntr_;
 }
 
-void LineSprite::Render(BYTE *screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
+void LineSprite::Render(BYTE *screenPtr, const Util::Rectangle *dest, int posX, int posY, bool forceNonAlpha)
 {
 	assert(screenPtr != nullptr);
 	BYTE *scrPtr{ screenPtr };
 	BYTE *drawPntr{ tPntr_ };
 
-	Rectangle tRect(frameRect_);
+	Util::Rectangle tRect((*frameRect_));
 
 	tRect.Clip_To(dest, posX, posY);
 
-	tRect.Translate(frameRect_.Get_Width() * frameNum_, 0);
+	tRect.Translate(frameRect_->Get_Width() * frameNum_, 0);
 	
 	//Allows user to prevent function from checking alpha values, use if you know texture does not use alpha channels
 	if (forceNonAlpha) {
-		if (frameRect_.Not_Contained(dest, posX, posY)) {
+		if (frameRect_->Not_Contained(dest, posX, posY)) {
 			//Do nothing
 		}
-		else if (frameRect_.Contained_In(dest, posX, posY)) {
+		else if (frameRect_->Contained_In(dest, posX, posY)) {
 			//Screen increment and startbyte based on position
-			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (posX + (posY * dest.Get_Width())) * 4;
+			int endIncrement = (dest->Get_Width() - tRect.Get_Width()) * 4;
+			int startByte = (posX + (posY * dest->Get_Width())) * 4;
 			scrPtr += startByte;
 			
 			//Same as above for texture
@@ -54,8 +55,8 @@ void LineSprite::Render(BYTE *screenPtr, const Rectangle &dest, int posX, int po
 		}
 		else {
 			//Screen increment and startbyte
-			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest.Get_Width())) * 4;
+			int endIncrement = (dest->Get_Width() - tRect.Get_Width()) * 4;
+			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest->Get_Width())) * 4;
 			scrPtr += startByte;
 
 			//Texture increment and startbyte
@@ -76,13 +77,13 @@ void LineSprite::Render(BYTE *screenPtr, const Rectangle &dest, int posX, int po
 	}
 	else {
 		BYTE alpha;
-		if (frameRect_.Not_Contained(dest, posX, posY)) {
+		if (frameRect_->Not_Contained(dest, posX, posY)) {
 			//Do nothing
 		}
-		else if (frameRect_.Contained_In(dest, posX, posY)) {
+		else if (frameRect_->Contained_In(dest, posX, posY)) {
 			//Screen increment and startbyte based on position
-			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (posX + (posY * dest.Get_Width())) * 4;
+			int endIncrement = (dest->Get_Width() - tRect.Get_Width()) * 4;
+			int startByte = (posX + (posY * dest->Get_Width())) * 4;
 			scrPtr += startByte;
 
 			//Same as above for texture
@@ -111,8 +112,8 @@ void LineSprite::Render(BYTE *screenPtr, const Rectangle &dest, int posX, int po
 		}
 		else {
 			//Screen increment and startbyte
-			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest.Get_Width())) * 4;
+			int endIncrement = (dest->Get_Width() - tRect.Get_Width()) * 4;
+			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest->Get_Width())) * 4;
 			scrPtr += startByte;
 
 			//Texture increment and startbyte

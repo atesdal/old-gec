@@ -1,11 +1,13 @@
 #pragma once
 
 #include <HAPI_lib.h>
-#include "..\..\utils\Rectangle.hpp"
 
 using namespace HAPISPACE;
 
-class Vector2;
+namespace Util {
+	class Rectangle;
+	class Vector2;
+}
 
 class Sprite
 {
@@ -22,7 +24,7 @@ public:
 	//Loads texture into memory using HAPI.LoadTexture
 	bool Init_Texture();
 	//Draws texture, set forceNonAlpha = true know texture does not use alpha
-	virtual void Render(BYTE *screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha = false) = 0;
+	virtual void Render(BYTE *screenPtr, const Util::Rectangle *dest, int posX, int posY, bool forceNonAlpha = false) = 0;
 	//Resets loop counter
 	virtual void Reset_Loop();
 	//Sets amount of times animation will loop, 0 = infinite
@@ -34,5 +36,5 @@ protected:
 	int tWidth_, tHeight_;
 	std::string tPath_;
 	BYTE *tPntr_;
-	Rectangle frameRect_;
+	Util::Rectangle *frameRect_;
 };

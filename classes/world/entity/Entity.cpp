@@ -1,8 +1,9 @@
 #include "Entity.hpp"
+#include "..\..\graphics\Graphics.hpp"
 
 
 Entity::Entity() :
-	spriteKey_(""), pos_(Vector2(0, 0)), isActive_(true), side_(Faction::ENeutral)
+	spriteKey_(""), pos_(Util::Vector2(0, 0)), isActive_(true), side_(Faction::ENeutral)
 {
 
 }

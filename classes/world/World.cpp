@@ -1,6 +1,7 @@
 #include "World.hpp"
 #include "entity\Entity.hpp"
 #include "entity\Tile.hpp"
+#include "..\graphics\Graphics.hpp"
 #include "..\utils\Utilities.hpp"
 
 #include <iostream>
@@ -43,7 +44,7 @@ bool World::Init_World(int screenWidth, int screenHeight)
 	g_->Init_Graphics(screenWidth, screenHeight, screen);
 
 	LoadLevel();
-
+	
 	return true;
 }
 
@@ -65,10 +66,11 @@ bool World::LoadLevel()
 	for (int i{ 0 }; i < 2; i++) {
 		for (int w{ 0 }; w < 2; w++) {
 			Tile *a = new Tile((*tileMap_.at("grass")));
-			a->Move_Entity(Vector2(float(tileSize * w), float(tileSize * i)));
+			a->Move_Entity(Util::Vector2(float(tileSize * w), float(tileSize * i)));
 			tileVector_.push_back(a);
 		}
 	}
+
 
 	return true;
 }
