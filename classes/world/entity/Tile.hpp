@@ -18,6 +18,7 @@ public:
 	bool Delete_Resource();
 	int Get_F_Yield() const { return food_; }
 	int Get_P_Yield() const { return prod_; }
+
 private:
 	int food_, prod_;
 	bool isImproved_;

@@ -18,6 +18,8 @@ LineSprite::~LineSprite()
 void LineSprite::Render(BYTE *screenPtr, const Util::Rectangle *dest, int posX, int posY, bool forceNonAlpha)
 {
 	assert(screenPtr != nullptr);
+	assert(frameRect_ != nullptr);
+
 	BYTE *scrPtr{ screenPtr };
 	BYTE *drawPntr{ tPntr_ };
 

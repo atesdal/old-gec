@@ -10,7 +10,8 @@
 
 namespace GFX
 {
-	Graphics::Graphics() : startOfScreen_(nullptr)
+	Graphics::Graphics() :
+		startOfScreen_(nullptr), screenRect_(nullptr)
 	{
 		screenRect_ = new Util::Rectangle(0, 0);
 	}

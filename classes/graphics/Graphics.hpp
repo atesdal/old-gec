@@ -14,7 +14,6 @@ class StaticSprite;
 class LineSprite;
 class SquareSprite;
 
-
 namespace GFX
 {
 	class Graphics
@@ -54,7 +53,7 @@ namespace GFX
 
 	private:
 		int wWidth_, wHeight_;
-		BYTE* startOfScreen_;
+		BYTE *startOfScreen_;
 		std::unordered_map<std::string, Sprite*> spriteMap_;
 		Util::Rectangle *screenRect_;
 	};

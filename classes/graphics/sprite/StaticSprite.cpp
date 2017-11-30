@@ -1,7 +1,7 @@
 #include "StaticSprite.hpp"
 #include "..\..\utils\Rectangle.hpp"
 #include "..\..\utils\Utilities.hpp"
-//TODO get asserts
+#include <cassert>
 
 StaticSprite::StaticSprite(int textureWidth, int textureHeight, std::string path) : 
 	Sprite(textureWidth, textureHeight, path)
@@ -16,10 +16,8 @@ StaticSprite::~StaticSprite()
 
 void StaticSprite::Render(BYTE *screenPtr, const Util::Rectangle *dest, int posX, int posY, bool forceNonAlpha)
 {
-	if (screenPtr == nullptr) {
-		HAPI.UserMessage("Nullptr errror(Fast_Blit)", "Error");
-		return;
-	}
+	assert(screenPtr != nullptr);
+	assert(frameRect_ != nullptr);
 
 	BYTE *scrPtr{ screenPtr };
 	BYTE *drawPntr{ tPntr_ };

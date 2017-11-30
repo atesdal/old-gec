@@ -48,7 +48,7 @@ void HAPI_Main()
 	//int rRumble{ 0 };
 	//int lRumble{ 0 };
 
-	World w;
+	SIM::World w;
 	if (!w.Init_World(1500, 600)) {
 		return;
 	}
