@@ -21,7 +21,7 @@ public:
 
 	//Virtuals
 	virtual void Update() = 0;
-	virtual void Render(GFX::Graphics &gfx);
+	virtual void Render(GFX::Graphics &gfx) const;
 	virtual void Move_Entity(Util::Vector2 newPos) { pos_ = pos_ + newPos; }
 	
 	//Base entity functions

@@ -15,6 +15,11 @@ namespace Util
 			return Vector2(x + rhs.x, y + rhs.y);
 		}
 
+		Vector2 operator+(int val) const
+		{
+			return Vector2(x + val, y + val);
+		}
+
 		Vector2 operator-(const Vector2 &rhs) const
 		{
 			return Vector2(x - rhs.x, y - rhs.y);
@@ -33,6 +38,16 @@ namespace Util
 		bool operator!=(const Vector2 &rhs)
 		{
 			return (((x != rhs.x) ? true : false) || ((y != rhs.y) ? true : false));
+		}
+
+		bool operator>(const Vector2 &rhs)
+		{
+			return (((x > rhs.x) ? true : false) || ((y > rhs.y) ? true : false));
+		}
+
+		bool operator>=(const Vector2 &rhs)
+		{
+			return (((x >= rhs.x) ? true : false) || ((y >= rhs.y) ? true : false));
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector2& vec)

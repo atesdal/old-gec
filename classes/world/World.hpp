@@ -6,8 +6,10 @@
 namespace GFX {
 	class Graphics;
 }
+namespace SIM {
+	class TileMap;
+}
 class Entity;
-class Tile;
 class Removable;
 class Resource;
 class Player;
@@ -29,11 +31,8 @@ namespace SIM
 		bool LoadLevel();
 
 		GFX::Graphics *g_;
+		SIM::TileMap *t_;
 		Player *p_;
 		std::vector<Entity*> entityVector_;
-		std::vector<Tile*> tileVector_;
-		std::unordered_map<std::string, Tile*> tileMap_;
-		std::unordered_map<std::string, Removable*> removableMap_;
-		std::unordered_map<std::string, Resource*> resourceMap_;
 	};
 }

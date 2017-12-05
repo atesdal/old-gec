@@ -12,11 +12,14 @@ namespace GFX {
 class Tile
 {
 public:
-	Tile(int foodYield, int prodYield, Removable *removable = nullptr, Resource *resource = nullptr);
+	Tile(std::string spriteKey, int foodYield, int prodYield, Removable *removable = nullptr, Resource *resource = nullptr);
 	~Tile();
 
 	void Update();
-	void Render(GFX::Graphics *gfx);
+	void Render(GFX::Graphics *gfx) const;
+	void Set_Pos(Util::Vector2 newPos) { pos_ = newPos; }
+	void Move(Util::Vector2 moveVec) { pos_ = pos_ + moveVec; }
+	Util::Vector2 Get_Pos() const { return pos_; }
 	bool Add_Removable(Removable *removable);
 	bool Delete_Removable();
 	bool Add_Resource(Resource *resource);

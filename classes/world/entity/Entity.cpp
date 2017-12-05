@@ -13,7 +13,7 @@ Entity::~Entity()
 
 }
 
-void Entity::Render(GFX::Graphics &gfx)
+void Entity::Render(GFX::Graphics &gfx) const
 {
 	gfx.Draw_Sprite(spriteKey_, pos_);
 }
