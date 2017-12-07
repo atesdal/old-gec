@@ -30,10 +30,11 @@ void Tile::Update()
 	}
 }
 
-void Tile::Render(GFX::Graphics *gfx) const
+void Tile::Render(GFX::Graphics *gfx,const int screenWidth, const int screenHeight) const
 {
 	gfx->Draw_Sprite(spriteKey_, pos_);
 	//Need to check if tile is on screen before rendering text, huge performance hit on large maps
+	if((int(pos_.x) >= 0 && int(pos_.y) >= 0) && (int(pos_.x) < screenWidth && int(pos_.y) < screenHeight))
 	HAPI.RenderText(int(pos_.x + 6), int(pos_.y + 5), HAPI_TColour::WHITE, Util::To_String(food_));
 	HAPI.RenderText(int(pos_.x + 5), int(pos_.y + 15), HAPI_TColour::WHITE, Util::To_String(prod_));
 

@@ -1,11 +1,11 @@
 #include "World.hpp"
 #include "player\Player.hpp"
 #include "entity\Entity.hpp"
+#include "entity\Unit.hpp"
 #include "map\TileMap.hpp"
+#include "map\Tile.hpp"
 #include "..\graphics\Graphics.hpp"
 #include "..\utils\Utilities.hpp"
-
-
 #include <iostream>
 
 namespace SIM
@@ -14,7 +14,7 @@ namespace SIM
 		g_(nullptr), p_(nullptr)
 	{
 		g_ = new GFX::Graphics();
-		t_ = new SIM::TileMap(3, 3, 256);
+		t_ = new SIM::TileMap(25, 25, 256, 1500, 750);
 		p_ = new Player();
 	}
 	
@@ -53,8 +53,13 @@ namespace SIM
 		g_->Create_Anim_Sprite("Data\\linetest.png", "line", 1536, 256, 6);
 		g_->Create_Anim_Sprite("Data\\runningcat.png", "square", 1024, 1024, 2, 4);
 
+		Unit *a = new Unit();
+		a->Set_Sprite("player");
+
+		entityVector_.push_back(a);
+
 		t_->Add_Tile_Template("grass", "grassTile", 2, 0);
-		for (int i{ 0 }; i < 9; i++) {
+		for (int i{ 0 }; i < 25 * 25; i++) {
 			if (!t_->Add_Tile("grassTile")) {
 				return false;
 			}
@@ -74,25 +79,37 @@ namespace SIM
 
 	void World::Update()
 	{
-		t_->Update();
-
-		for (auto p : entityVector_) {
-			p->Update();
-		}
-
+		//Player update
 		p_->Update();
+		
 		Util::Vector2 playerPos = p_->Get_Cam_Pos();
 		if (playerPos != Util::Vector2(0.0f, 0.0f)) {
 			t_->Move_Relative_To(playerPos);
 		}
-		p_->Reset_CamPos();
+		//Player update ends
+		//TileMap update
+		t_->Update();
+		//TileMap update ends
+		//Entity update
+		for (auto p : entityVector_) {
+			p->Update();
+			if (playerPos != Util::Vector2(0.0f, 0.0f)) {
+				p->Move_Relative_To(playerPos);
+			}
+		}
+		//Entity update ends
+		//Player input
+		if (p_->Has_Clicked()) {
+			p_->Get_M_Input()
+		}
+		p_->Zero_CamPos();
 	}
 
 	void World::Render()
 	{
+		t_->Render(g_);
 		for (auto p : entityVector_) {
 			p->Render((*g_));
 		}
-		t_->Render(g_);
 	}
 }

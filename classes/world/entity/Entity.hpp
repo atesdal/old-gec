@@ -25,6 +25,7 @@ public:
 	virtual void Move_Entity(Util::Vector2 newPos) { pos_ = pos_ + newPos; }
 	
 	//Base entity functions
+	void Move_Relative_To(Util::Vector2 camPos);
 	Util::Vector2 Get_Pos() const { return pos_; }
 	void Set_Sprite(std::string newSprite);
 	std::string Get_Sprite() const { return spriteKey_; }

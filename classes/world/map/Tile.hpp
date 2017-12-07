@@ -16,7 +16,7 @@ public:
 	~Tile();
 
 	void Update();
-	void Render(GFX::Graphics *gfx) const;
+	void Render(GFX::Graphics *gfx, const int screenWidth, const int screenHeight) const;
 	void Set_Pos(Util::Vector2 newPos) { pos_ = newPos; }
 	void Move(Util::Vector2 moveVec) { pos_ = pos_ + moveVec; }
 	Util::Vector2 Get_Pos() const { return pos_; }

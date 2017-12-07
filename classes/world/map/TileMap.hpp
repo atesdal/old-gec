@@ -13,7 +13,7 @@ namespace SIM {
 	class TileMap
 	{
 	public:
-		TileMap(int mapWidth, int mapHeight, int tileSize);
+		TileMap(int mapWidth, int mapHeight, int tileSize, int screenWidth, int screenHeight);
 		~TileMap();
 		//Updates tiles
 		void Update();
@@ -27,7 +27,7 @@ namespace SIM {
 		//Returns pointer to the tile at given position, if doesn't exist returns nullptr
 		Tile* Find_Tile(Util::Vector2 pos) const;
 	private:
-		const int mapWidth_, mapHeight_, tileSize_;
+		const int mapWidth_, mapHeight_, tileSize_, screenWidth_, screenHeight_;
 		//Holds active Tile pointers
 		std::vector<Tile*> tileVector_;
 		//Holds template tiles 

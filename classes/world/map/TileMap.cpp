@@ -1,11 +1,9 @@
 #include "TileMap.hpp"
 #include "Tile.hpp"
 
-#include <iostream>
-
 namespace SIM {
-	TileMap::TileMap(int mapWidth, int mapHeight, int tileSize) :
-		mapWidth_(mapWidth), mapHeight_(mapHeight), tileSize_(tileSize)
+	TileMap::TileMap(int mapWidth, int mapHeight, int tileSize, int screenWidth, int screenHeight) :
+		mapWidth_(mapWidth), mapHeight_(mapHeight), tileSize_(tileSize), screenWidth_(screenWidth), screenHeight_(screenHeight)
 	{
 
 	}
@@ -34,7 +32,7 @@ namespace SIM {
 			return false;
 		}
 		for (auto p : tileVector_) {
-			p->Render(gfx);
+			p->Render(gfx, screenWidth_, screenHeight_);
 		}
 		return true;
 	}
