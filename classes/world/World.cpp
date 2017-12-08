@@ -6,6 +6,7 @@
 #include "map\Tile.hpp"
 #include "..\graphics\Graphics.hpp"
 #include "..\utils\Utilities.hpp"
+#include "..\utils\Camera.hpp"
 #include <iostream>
 
 namespace SIM
@@ -15,6 +16,7 @@ namespace SIM
 	{
 		g_ = new GFX::Graphics();
 		t_ = new SIM::TileMap(25, 25, 256, 1500, 750);
+		c_ = new Util::Camera();
 		p_ = new Player();
 	}
 	
@@ -22,6 +24,7 @@ namespace SIM
 	{
 		delete g_;
 		delete t_;
+		delete c_;
 		delete p_;
 		for (auto p : entityVector_) {
 			delete p;
