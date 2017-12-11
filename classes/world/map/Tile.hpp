@@ -10,13 +10,11 @@ namespace Util{
 	class Camera;
 }
 
-namespace MAP {
-	class Feature;
-	class Resource;
-}
-
 namespace MAP
 {
+	class Feature;
+	class Resource;
+
 	class Tile
 	{
 	public:

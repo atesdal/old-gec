@@ -6,12 +6,7 @@
 namespace GFX {
 	class Graphics;
 }
-namespace SIM {
-	class Player;
-	class Entity;
-	class Removable;
-	class Resource;
-}
+
 namespace MAP {
 	class TileMap;
 }
@@ -21,6 +16,11 @@ namespace Util {
 
 namespace SIM
 {
+	class Player;
+	class Entity;
+	class Removable;
+	class Resource;
+
 	class World
 	{
 	public:
@@ -38,7 +38,8 @@ namespace SIM
 		GFX::Graphics *g_;
 		MAP::TileMap *t_;
 		Util::Camera *c_;
-		SIM::Player *p_;
+		Player *p_;
+		std::vector<Player*> playerVector_;
 		std::vector<Entity*> entityVector_;
 	};
 }

@@ -1,14 +1,13 @@
 #pragma once
 
-namespace Util {
-	class Vector2;
-}
 namespace SIM {
 	class Player;
 }
 
 namespace Util
 {
+	class Vector2;
+
 	class Camera
 	{
 	public:

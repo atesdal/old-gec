@@ -1,15 +1,12 @@
 #include "Resource.hpp"
 
-namespace MAP
+MAP::Resource::Resource(std::string spriteKey, int foodBonus, int prodBonus, int harvestFoodYield, int harvestProdYield) :
+	spriteKey_(spriteKey), fBonus_(foodBonus), pBonus_(prodBonus), harvestYieldF_(harvestFoodYield), harvestYieldP_(harvestProdYield)
 {
-	Resource::Resource(std::string spriteKey, int foodBonus, int prodBonus, int harvestFoodYield, int harvestProdYield) :
-		spriteKey_(spriteKey), fBonus_(foodBonus), pBonus_(prodBonus), harvestYieldF_(harvestFoodYield), harvestYieldP_(harvestProdYield)
-	{
 
-	}
+}
 
 
-	Resource::~Resource()
-	{
-	}
+MAP::Resource::~Resource()
+{
 }

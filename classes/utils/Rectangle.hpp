@@ -1,11 +1,9 @@
 #pragma once
 
-namespace Util {
-	class Vector2;
-}
-
 namespace Util
 {
+	class Vector2;
+
 	class Rectangle
 	{
 	public:
