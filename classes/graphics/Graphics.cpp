@@ -205,4 +205,12 @@ namespace GFX
 		spriteMap_.at(spriteName)->Set_Loop(amount);
 		return true;
 	}
+
+	Util::Rectangle* Graphics::Get_Rect(std::string spriteName)
+	{
+		if (spriteMap_.find(spriteName) == spriteMap_.end()) {
+			return nullptr;
+		}
+		return spriteMap_.at(spriteName)->Get_Rect();
+	}
 }

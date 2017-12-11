@@ -1,7 +1,10 @@
 #include "TileMap.hpp"
 #include "Tile.hpp"
+#include "Feature.hpp"
+#include "Resource.hpp"
+#include "..\..\utils\Camera.hpp"
 
-namespace SIM {
+namespace MAP {
 	TileMap::TileMap(int mapWidth, int mapHeight, int tileSize, int screenWidth, int screenHeight) :
 		mapWidth_(mapWidth), mapHeight_(mapHeight), tileSize_(tileSize), screenWidth_(screenWidth), screenHeight_(screenHeight)
 	{
@@ -17,6 +20,14 @@ namespace SIM {
 		for (auto p : tileMap_) {
 			delete p.second;
 		}
+
+		for (auto p : featMap_) {
+			delete p.second;
+		}
+
+		for (auto p : resMap_) {
+			delete p.second;
+		}
 	}
 
 	void TileMap::Update()
@@ -26,25 +37,19 @@ namespace SIM {
 		}
 	}
 
-	bool TileMap::Render(GFX::Graphics *gfx) const
+	bool TileMap::Render(GFX::Graphics *gfx, Util::Camera *pCamera) const
 	{
-		if (gfx == nullptr) {
+		if (gfx == nullptr || pCamera == nullptr) {
 			return false;
 		}
+
 		for (auto p : tileVector_) {
-			p->Render(gfx, screenWidth_, screenHeight_);
+			p->Render(gfx, pCamera, screenWidth_, screenHeight_);
 		}
 		return true;
 	}
 
-	void TileMap::Move_Relative_To(Util::Vector2 camPos)
-	{
-		for (auto p : tileVector_) {
-			p->Move(Util::Vector2((-camPos.x), (-camPos.y)));
-		}
-	}
-
-	bool TileMap::Add_Tile_Template(std::string spriteKey, std::string tileName, int foodYield, int prodYield)
+	bool TileMap::Create_Tile(std::string spriteKey, std::string tileName, int foodYield, int prodYield)
 	{
 		//Checks to see if tile already exists
 		//NOTE: you can have several tiles with the same data as long as tileName is unique
@@ -86,13 +91,36 @@ namespace SIM {
 		return false;
 	}
 
+	bool TileMap::Create_Feature(std::string featKey, std::string spriteKey, int foodBonus, int prodBonus, int harvestFoodYield, int harvestProdYield)
+	{
+		if (featMap_.find(featKey) == featMap_.end()) {
+			Feature *newFeat = new Feature(spriteKey, foodBonus, prodBonus, harvestFoodYield, harvestProdYield);
+			featMap_[featKey] = newFeat;
+			return true;
+		}
+		return false;
+	}
+
+	bool TileMap::Create_Resource(std::string resKey, std::string spriteKey, int foodBonus, int prodBonus, int harvestFoodYield, int harvestProdYield)
+	{
+		if (resMap_.find(resKey) == resMap_.end()) {
+			Resource *newRes = new Resource(spriteKey, foodBonus, prodBonus, harvestFoodYield, harvestProdYield);
+			resMap_[resKey] = newRes;
+			return true;
+		}
+		return false;
+	}
+
 	Tile* TileMap::Find_Tile(Util::Vector2 pos) const
 	{
 		//Convert tilemap dimensions into a world coordinate vector
 		Util::Vector2 compVector = Util::Vector2(mapWidth_ * float(tileSize_), mapHeight_ * float(tileSize_));
 
 		//Checks to see if input vector is within bounds of tilemap
-		if (pos > compVector) {
+		if (pos >= compVector) {
+			return nullptr;
+		}
+		if (pos < Util::Vector2(0.0f, 0.0f)) {
 			return nullptr;
 		}
 		//Convert input position to tile-size with integer division
@@ -100,7 +128,7 @@ namespace SIM {
 		int modY = int(pos.y) / tileSize_;
 
 		//Final calculation to determine the Tile's index in tileVector_
-		int vectorIndex = modX + (modY * (mapWidth_ - 1));
+		int vectorIndex = modX + (modY * mapWidth_);
 
 		return tileVector_[vectorIndex];
 	}

@@ -1,5 +1,9 @@
 #pragma once
 
+namespace Util {
+	class Vector2;
+}
+
 namespace Util
 {
 	class Rectangle
@@ -31,6 +35,8 @@ namespace Util
 		bool Contained_In(const Rectangle *other, int posX, int posY);
 		//Checks if this rectangle is completely outside other rectangle
 		bool Not_Contained(const Rectangle *other, int posX, int posY);
+		//Checks if this rectangle contains vector
+		bool Contains(const Util::Vector2 *other, int posX, int posY);
 
 	private:
 		int left, right, top, bottom;

@@ -48,8 +48,8 @@ namespace GFX
 		bool Reset_Sprite_Loop(std::string &spriteName);
 		//Sets how many times an animated sprite will loop
 		bool Set_Sprite_Loop(std::string &spriteName, int amount);
-
-	protected:
+		//Returns rectangle from sprite, nullptr if sprite not found
+		Util::Rectangle* Get_Rect(std::string spriteName);
 
 	private:
 		int wWidth_, wHeight_;

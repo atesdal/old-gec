@@ -1,4 +1,5 @@
 #include "Rectangle.hpp"
+#include "Vector2.hpp"
 #include "Utilities.hpp"
 
 namespace Util
@@ -87,6 +88,17 @@ namespace Util
 		}
 		//And Y axis
 		else if (bottom < 0 || top >= other->Get_Height()) {
+			Translate(-posX, -posY);
+			return true;
+		}
+		Translate(-posX, -posY);
+		return false;
+	}
+
+	bool Util::Rectangle::Contains(const Util::Vector2 *other, int posX, int posY)
+	{
+		Translate(posX, posY);
+		if ((other->x > left && other->x < right) && (other->y > top && other->y < bottom)) {
 			Translate(-posX, -posY);
 			return true;
 		}

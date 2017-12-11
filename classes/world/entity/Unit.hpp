@@ -2,12 +2,15 @@
 
 #include "Entity.hpp"
 
-class Unit : public Entity
+namespace SIM
 {
-public:
-	Unit();
-	~Unit();
+	class Unit : public Entity
+	{
+	public:
+		Unit();
+		~Unit();
 
-	void Update() override;
-};
-
+		void Update() override;
+		void Move_Entity(MAP::Tile *newPos) override;
+	};
+}

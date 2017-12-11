@@ -3,7 +3,9 @@
 namespace Util {
 	class Vector2;
 }
-class Player;
+namespace SIM {
+	class Player;
+}
 
 namespace Util
 {
@@ -14,13 +16,13 @@ namespace Util
 		~Camera();
 
 		void Update();
-		bool Attach_Camera(Player *player);
+		bool Attach_Camera(SIM::Player *player);
 
 		int Get_X() const;
 		int Get_Y() const;
 
 	private:
 		int posX_, posY_;
-		Player *p_;
+		SIM::Player *p_;
 	};
 }

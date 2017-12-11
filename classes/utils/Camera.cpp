@@ -16,12 +16,15 @@ namespace Util
 
 	void Util::Camera::Update()
 	{
-		Util::Vector2 playerPos = p_->Get_Cam_Pos();
-		posX_ = int(playerPos.x);
-		posY_ = int(playerPos.y);
+		if (p_ == nullptr) {
+			return;
+		}
+		Util::Vector2 playerPos = p_->Get_Pos();
+		posX_ = int(-playerPos.x);
+		posY_ = int(-playerPos.y);
 	}
 
-	bool Camera::Attach_Camera(Player *player)
+	bool Camera::Attach_Camera(SIM::Player *player)
 	{
 		if (player == nullptr) {
 			return false;

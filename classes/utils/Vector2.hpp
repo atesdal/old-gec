@@ -50,6 +50,11 @@ namespace Util
 			return (((x >= rhs.x) ? true : false) || ((y >= rhs.y) ? true : false));
 		}
 
+		bool operator<(const Vector2 &rhs)
+		{
+			return (((x < rhs.x) ? true : false) || ((y < rhs.y) ? true : false));
+		}
+
 		friend std::ostream& operator<<(std::ostream& os, const Vector2& vec)
 		{
 			return os << vec.x << ", " << vec.y;

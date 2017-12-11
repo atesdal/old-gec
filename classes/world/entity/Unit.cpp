@@ -1,15 +1,30 @@
 #include "Unit.hpp"
+#include "..\..\world\map\Tile.hpp"
 
-Unit::Unit()
+namespace SIM
 {
-}
+	Unit::Unit() :
+		Entity()
+	{
+		isClickable_ = true;
+	}
 
 
-Unit::~Unit()
-{
-}
+	Unit::~Unit()
+	{
+	}
 
-void Unit::Update()
-{
-
+	void Unit::Update()
+	{
+		
+	}
+	
+	void Unit::Move_Entity(MAP::Tile *newPos)
+	{
+		if (newPos == nullptr) {
+			return;
+		}
+		currTile_ = newPos;
+		pos_ = currTile_->Get_Pos();
+	}
 }

@@ -29,6 +29,8 @@ public:
 	virtual void Reset_Loop();
 	//Sets amount of times animation will loop, 0 = infinite
 	virtual void Set_Loop(int amount);
+	//Returns pointer to frame rectangle
+	Util::Rectangle* Get_Rect() { return frameRect_; }
 
 protected:
 	void Alpha_Blit(BYTE *currSPtr, BYTE *currTPtr);
