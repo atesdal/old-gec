@@ -42,6 +42,7 @@ namespace SIM
 		void Set_Active(bool active);
 		Faction Get_Side() const { return side_; }
 		void Set_Side(Faction side);
+		Util::Rectangle* Get_Bounds() const { return boundRect_; }
 
 		bool Is_Colliding(const Util::Vector2 *other);
 		bool Is_Colliding(const Util::Rectangle *other);

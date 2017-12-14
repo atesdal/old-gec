@@ -12,5 +12,8 @@ namespace SIM
 
 		void Update() override;
 		void Move_Entity(MAP::Tile *newPos) override;
+
+	private:
+		int movesLeft_;
 	};
 }

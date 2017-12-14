@@ -5,7 +5,7 @@
 
 SIM::Player::Player() :
 	camPos_(Util::Vector2(0, 0)), worldMPos_(Util::Vector2(0, 0)), 
-	mData(HAPI.GetMouseData()), kData(HAPI.GetKeyboardData()), hasClicked_(false), selectedEntIndex_(-1)
+	mData(HAPI.GetMouseData()), kData(HAPI.GetKeyboardData()), hasClicked_(false), endedTurn_(false), selectedEntIndex_(-1)
 {
 		
 }
@@ -17,10 +17,10 @@ SIM::Player::~Player()
 
 void SIM::Player::Update()
 {
-		
 	mData = HAPI.GetMouseData();
 	kData = HAPI.GetKeyboardData();
 	hasClicked_ = false;
+	endedTurn_ = false;
 
 	if (mData.leftButtonDown) {
 		Convert_M_To_World();
@@ -42,6 +42,10 @@ void SIM::Player::Update()
 	}
 	else if (kData.scanCode['D']) {
 		camPos_ = camPos_ + Util::Vector2(5, 0);
+	}
+
+	if (kData.scanCode[HK_RETURN]) {
+		endedTurn_ = true;
 	}
 }
 

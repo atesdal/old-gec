@@ -54,6 +54,8 @@ bool MAP::TileMap::Create_Tile(std::string spriteKey, std::string tileName, int 
 	//NOTE: you can have several tiles with the same data as long as tileName is unique
 	if (tileMap_.find(tileName) == tileMap_.end()) {
 		Tile *newTileTemp = new Tile(spriteKey, foodYield, prodYield);
+		Create_Feature("feature", "background", 2, 2, 0, 0);
+		//newTileTemp->Add_Feature(featMap_.at("feature"));
 		tileMap_[tileName] = newTileTemp;
 		return true;
 	}

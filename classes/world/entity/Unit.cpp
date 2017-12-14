@@ -2,7 +2,7 @@
 #include "..\..\world\map\Tile.hpp"
 
 SIM::Unit::Unit() :
-	Entity()
+	Entity(), movesLeft_(2)
 {
 	isClickable_ = true;
 }

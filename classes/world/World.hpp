@@ -34,11 +34,12 @@ namespace SIM
 		void Update();
 		void Render();
 		bool LoadLevel();
+		void Check_Collosions();
+		int currPlayer_;
 
 		GFX::Graphics *g_;
 		MAP::TileMap *t_;
 		Util::Camera *c_;
-		Player *p_;
 		std::vector<Player*> playerVector_;
 		std::vector<Entity*> entityVector_;
 	};

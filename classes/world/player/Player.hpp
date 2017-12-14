@@ -28,6 +28,10 @@ namespace SIM
 		void Deselect() { selectedEntIndex_ = -1; }
 		//Returns index to selected entity, -1 if none selected
 		int Get_Selected() const { return selectedEntIndex_; }
+		
+		bool Has_Ended() const { return endedTurn_; }
+
+		 
 	private:
 		//Converts mouse screen position to world position
 		void Convert_M_To_World();
@@ -35,7 +39,7 @@ namespace SIM
 		Util::Vector2 camPos_, worldMPos_;
 		HAPISPACE::HAPI_TMouseData mData;
 		HAPISPACE::HAPI_TKeyboardData kData;
-		bool hasClicked_;
+		bool hasClicked_, endedTurn_;
 		int selectedEntIndex_;
 	};
 }
