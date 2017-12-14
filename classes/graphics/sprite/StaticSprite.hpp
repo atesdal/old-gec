@@ -8,5 +8,5 @@ public:
 	StaticSprite(int textureWidth, int textureHeight, std::string path);
 	~StaticSprite();
 
-	void Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha = false) override;
+	void Render(BYTE *screenPtr, const Util::Rectangle *dest, int posX, int posY, bool forceNonAlpha = false) override;
 };

@@ -3,41 +3,44 @@
 #include "sprite\StaticSprite.hpp"
 #include "sprite\LineSprite.hpp"
 #include "sprite\SquareSprite.hpp"
-#include "..\Vector2.hpp"
-#include <algorithm>
+#include "..\utils\Rectangle.hpp"
+#include "..\utils\Utilities.hpp"
+#include "..\utils\Vector2.hpp"
 #include <cassert>
 
-Graphics::Graphics() : startOfScreen_(nullptr), screenRect_(0, 0)
+GFX::Graphics::Graphics() :
+	startOfScreen_(nullptr), screenRect_(nullptr)
 {
-	
+	screenRect_ = new Util::Rectangle(0, 0);
 }
 
-Graphics::~Graphics()
+GFX::Graphics::~Graphics()
 {
+	delete screenRect_;
 	for (auto p : spriteMap_) {
 		delete p.second;
 	}
 }
 
-void Graphics::Init_Graphics(int screenWidth, int screenHeight, BYTE* screenPtr)
+void GFX::Graphics::Init_Graphics(int screenWidth, int screenHeight, BYTE* screenPtr)
 {
 	assert(screenPtr != nullptr);
 	wWidth_ = screenWidth;
 	wHeight_ = screenHeight;
 	startOfScreen_ = screenPtr;
-	screenRect_.Set_Width(screenWidth);
-	screenRect_.Set_Height(screenHeight);
+	screenRect_->Set_Width(screenWidth);
+	screenRect_->Set_Height(screenHeight);
 }
 
-void Graphics::Clear_Screen(int grayScale)
+void GFX::Graphics::Clear_Screen(int grayScale)
 {
 	if (grayScale < 0 || grayScale > 255) {
 		std::cout << "Clear_Screen(grayScale) out of bounds, check values!" << std::endl;
 	}
-	memset(startOfScreen_, std::max(0, std::min(255, grayScale)), (wWidth_ * wHeight_ * 4));
+	memset(startOfScreen_, Util::Max(0, Util::Min(255, grayScale)), (wWidth_ * wHeight_ * 4));
 }
 
-void Graphics::Clear_Screen(HAPI_TColour screenColour)
+void GFX::Graphics::Clear_Screen(HAPI_TColour screenColour)
 {
 	BYTE *scrPntr = startOfScreen_;
 	HAPI_TColour col = screenColour;
@@ -47,7 +50,7 @@ void Graphics::Clear_Screen(HAPI_TColour screenColour)
 	}
 }
 
-bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
+bool GFX::Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
 {
 	if (shapeWidth > wWidth_ || shapeHeight > wHeight_) {
 		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale))", "Error");
@@ -64,15 +67,16 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int grayScale)
 	return true;
 }
 
-bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale)
+bool GFX::Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale)
 {
 	if ((shapeWidth + posX) > wWidth_ || posX < 0) {
 		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale))", "Error");
-		return false; 
+		return false;
 	}
 	else if ((shapeHeight + posY) > wHeight_ || posY < 0) {
 		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, int grayScale))", "Error");
-		return false; } // and Y-direction
+		return false;
+	} // and Y-direction
 
 	int endIncrement = wWidth_ * 4;
 	int startByte = (posX + (posY * wWidth_)) * 4;
@@ -87,7 +91,7 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, i
 	return true;
 }
 
-bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour)
+bool GFX::Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour)
 {
 	if (shapeWidth > wWidth_ || shapeHeight > wHeight_) {
 		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeColour))", "Error");
@@ -107,12 +111,12 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, HAPI_TColour shapeCol
 	return true;
 }
 
-bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour)
+bool GFX::Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour)
 {
 	if ((shapeWidth + posX) > wWidth_ || posX < 0) {
 		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour))", "Error");
 		return false;
-	} 
+	}
 	else if ((shapeHeight + posY) > wHeight_ || posY < 0) {
 		HAPI.UserMessage("Dimensions out of bounds(Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, HAPI_TColour shapeColour))", "Error");
 		return false;
@@ -134,7 +138,7 @@ bool Graphics::Draw_Pixel(int shapeWidth, int shapeHeight, int posX, int posY, H
 	return true;
 }
 
-bool Graphics::Create_Static_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height)
+bool GFX::Graphics::Create_Static_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height)
 {
 	if (spriteMap_.find(uniqueName) == spriteMap_.end()) {
 		StaticSprite *a = new StaticSprite(width, height, fileName);
@@ -148,11 +152,11 @@ bool Graphics::Create_Static_Sprite(const std::string &fileName, const std::stri
 	return false;
 }
 
-bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows, int numLoops)
+bool GFX::Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string &uniqueName, int width, int height, int numFrames, int numRows, DWORD frameTimeMS, int numLoops)
 {
 	if (spriteMap_.find(uniqueName) == spriteMap_.end()) {
 		if (numRows != 1) {
-			SquareSprite *a = new SquareSprite(width, height, fileName, numFrames, numRows, numLoops);
+			SquareSprite *a = new SquareSprite(width, height, fileName, numFrames, numRows, frameTimeMS, numLoops);
 			if (!a->Init_Texture()) {
 				delete a;
 				return false;
@@ -161,7 +165,7 @@ bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string
 			return true;
 		}
 		else {
-			LineSprite *a = new LineSprite(width, height, fileName, numFrames, numLoops);
+			LineSprite *a = new LineSprite(width, height, fileName, numFrames, frameTimeMS, numLoops);
 			if (!a->Init_Texture()) {
 				delete a;
 				return false;
@@ -173,16 +177,16 @@ bool Graphics::Create_Anim_Sprite(const std::string &fileName, const std::string
 	return false;
 }
 
-bool Graphics::Draw_Sprite(const std::string &spriteName, int posX, int posY, bool forceNonAlpha) const
+bool GFX::Graphics::Draw_Sprite(const std::string &spriteName, Util::Vector2 pos, bool forceNonAlpha) const
 {
 	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
 		return false;
 	}
-	spriteMap_.at(spriteName)->Render(startOfScreen_, screenRect_, posX, posY, forceNonAlpha);
+	spriteMap_.at(spriteName)->Render(startOfScreen_, screenRect_, int(pos.x), int(pos.y), forceNonAlpha);
 	return true;
 }
 
-bool Graphics::Reset_Sprite_Loop(std::string & spriteName)
+bool GFX::Graphics::Reset_Sprite_Loop(std::string & spriteName)
 {
 	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
 		return false;
@@ -191,11 +195,19 @@ bool Graphics::Reset_Sprite_Loop(std::string & spriteName)
 	return true;
 }
 
-bool Graphics::Set_Sprite_Loop(std::string & spriteName, int amount)
+bool GFX::Graphics::Set_Sprite_Loop(std::string & spriteName, int amount)
 {
 	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
 		return false;
 	}
 	spriteMap_.at(spriteName)->Set_Loop(amount);
 	return true;
+}
+
+Util::Rectangle* GFX::Graphics::Get_Rect(std::string spriteName)
+{
+	if (spriteMap_.find(spriteName) == spriteMap_.end()) {
+		return nullptr;
+	}
+	return spriteMap_.at(spriteName)->Get_Rect();
 }

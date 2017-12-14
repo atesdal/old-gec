@@ -1,27 +1,28 @@
 #include "StaticSprite.hpp"
-#include "..\..\Vector2.hpp"
+#include "..\..\utils\Rectangle.hpp"
+#include "..\..\utils\Utilities.hpp"
+#include <cassert>
 
 StaticSprite::StaticSprite(int textureWidth, int textureHeight, std::string path) : 
 	Sprite(textureWidth, textureHeight, path)
 {
-
+	
 }
 
 StaticSprite::~StaticSprite()
 {
-	delete[] tPntr_;
+
 }
 
-void StaticSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int posY, bool forceNonAlpha)
+void StaticSprite::Render(BYTE *screenPtr, const Util::Rectangle *dest, int posX, int posY, bool forceNonAlpha)
 {
-	if (screenPtr == nullptr) {
-		HAPI.UserMessage("Nullptr errror(Fast_Blit)", "Error");
-		return;
-	}
+	assert(screenPtr != nullptr);
+	assert(frameRect_ != nullptr);
+
 	BYTE *scrPtr{ screenPtr };
 	BYTE *drawPntr{ tPntr_ };
 
-	Rectangle tRect(Get_Width(), Get_Height());
+	Util::Rectangle tRect(Get_Width(), Get_Height());
 
 	tRect.Clip_To(dest, posX, posY);
 
@@ -32,8 +33,8 @@ void StaticSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int 
 		}
 		else if (tRect.Contained_In(dest, posX, posY)) {
 			//Screen increment and startbyte based on position
-			int endIncrement = dest.Get_Width() * 4;
-			int startByte = (posX + (posY * dest.Get_Width())) * 4;
+			int endIncrement = dest->Get_Width() * 4;
+			int startByte = (posX + (posY * dest->Get_Width())) * 4;
 			scrPtr += startByte;
 
 			for (int h{ 0 }; h < tRect.Get_Height(); h++) {
@@ -45,8 +46,8 @@ void StaticSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int 
 		}
 		else {
 			//Screen increment and startbyte
-			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (std::max(0, posX) + (std::max(0, posY) * dest.Get_Width())) * 4;
+			int endIncrement = (dest->Get_Width() - tRect.Get_Width()) * 4;
+			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest->Get_Width())) * 4;
 
 			//Texture increment and startbyte
 			int endIncrementT = (tWidth_ - tRect.Get_Width()) * 4;
@@ -74,8 +75,8 @@ void StaticSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int 
 		}
 		else if (tRect.Contained_In(dest, posX, posY)) {
 			//Screen increment and startbyte based on position
-			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (posX + (posY * dest.Get_Width())) * 4;
+			int endIncrement = (dest->Get_Width() - tRect.Get_Width()) * 4;
+			int startByte = (posX + (posY * dest->Get_Width())) * 4;
 			scrPtr += startByte;
 
 
@@ -101,8 +102,8 @@ void StaticSprite::Render(BYTE* screenPtr, const Rectangle &dest, int posX, int 
 		}
 		else {
 			//Screen increment and startbyte
-			int endIncrement = (dest.Get_Width() - tRect.Get_Width()) * 4;
-			int startByte = (std::max(0, posX) + (std::max(0, posY) * dest.Get_Width())) * 4;
+			int endIncrement = (dest->Get_Width() - tRect.Get_Width()) * 4;
+			int startByte = (Util::Max(0, posX) + (Util::Max(0, posY) * dest->Get_Width())) * 4;
 
 			//Texture increment and startbyte
 			int endIncrementT = (tWidth_ - tRect.Get_Width()) * 4;

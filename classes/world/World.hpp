@@ -1,21 +1,45 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
 
-class Entity;
-class Graphics;
+namespace GFX {
+	class Graphics;
+}
 
-class World
+namespace MAP {
+	class TileMap;
+}
+namespace Util {
+	class Camera;
+}
+
+namespace SIM
 {
-public:
-	World();
-	~World();
+	class Player;
+	class Entity;
+	class Removable;
+	class Resource;
 
-	bool Init_World(int screenWidth, int screenHeight);
-	void Run();
+	class World
+	{
+	public:
+		World();
+		~World();
 
-private:
-	Graphics *g;
-	std::vector<Entity*> entityVector_;
-};
+		bool Init_World(int screenWidth, int screenHeight);
+		void Run();
 
+	private:
+		void Update();
+		void Render();
+		bool LoadLevel();
+
+		GFX::Graphics *g_;
+		MAP::TileMap *t_;
+		Util::Camera *c_;
+		Player *p_;
+		std::vector<Player*> playerVector_;
+		std::vector<Entity*> entityVector_;
+	};
+}
