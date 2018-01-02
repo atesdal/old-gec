@@ -1,5 +1,6 @@
 #pragma once
 
+#include <HAPI_lib.h>
 #include <vector>
 #include <unordered_map>
 
@@ -34,9 +35,11 @@ namespace SIM
 		void Update();
 		void Render();
 		bool LoadLevel();
-		void Check_Collosions();
-		int currPlayer_;
+		void Player_Input(HAPISPACE::HAPI_TMouseData &mouseData, HAPISPACE::HAPI_TKeyboardData &keyboardData);
+		void Check_Collisions();
+		bool Check_Collisions(int entityIndex);
 
+		int currPlayer_;
 		GFX::Graphics *g_;
 		MAP::TileMap *t_;
 		Util::Camera *c_;

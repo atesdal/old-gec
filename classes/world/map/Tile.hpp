@@ -21,6 +21,13 @@ namespace MAP
 		Tile(std::string spriteKey, int foodYield, int prodYield);
 		~Tile();
 
+		struct Boundaries {
+			Tile* north = nullptr;
+			Tile* south = nullptr;
+			Tile* east = nullptr;
+			Tile* west = nullptr;
+		};
+
 		void Update();
 		void Render(GFX::Graphics *gfx, Util::Camera *pCamera, const int screenWidth, const int screenHeight) const;
 		void Set_Pos(Util::Vector2 newPos) { pos_ = newPos; }
@@ -32,6 +39,8 @@ namespace MAP
 		bool Delete_Resource();
 		int Get_F_Yield() const { return food_; }
 		int Get_P_Yield() const { return prod_; }
+		void Set_Bounds(Boundaries newBounds) { tileBounds_ = newBounds; }
+		Boundaries Get_Bounds() const { return tileBounds_; }
 
 	private:
 		std::string spriteKey_;
@@ -40,5 +49,6 @@ namespace MAP
 		bool isImproved_;
 		Feature *feature_;
 		Resource *resource_;
+		Boundaries tileBounds_;
 	};
 }

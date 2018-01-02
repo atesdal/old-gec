@@ -37,8 +37,8 @@ namespace SIM
 		void Convert_M_To_World();
 
 		Util::Vector2 camPos_, worldMPos_;
-		HAPISPACE::HAPI_TMouseData mData;
-		HAPISPACE::HAPI_TKeyboardData kData;
+		const HAPISPACE::HAPI_TMouseData &mData;
+		const HAPISPACE::HAPI_TKeyboardData &kData;
 		bool hasClicked_, endedTurn_;
 		int selectedEntIndex_;
 	};

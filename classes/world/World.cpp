@@ -16,7 +16,7 @@ namespace SIM
 		g_(nullptr), currPlayer_(0)
 	{
 		g_ = new GFX::Graphics();
-		t_ = new MAP::TileMap(25, 25, 256, 1500, 750);
+		t_ = new MAP::TileMap(3, 3, 256, 1500, 750);
 		c_ = new Util::Camera();
 		Player *p = new Player();
 		playerVector_.push_back(p);
@@ -64,24 +64,73 @@ namespace SIM
 		g_->Create_Anim_Sprite("Data\\runningcat.png", "square", 1024, 1024, 2, 4);
 
 		t_->Create_Tile("grass", "grassTile", 2, 0);
-		for (int i{ 0 }; i < 25 * 25; i++) {
+		for (int i{ 0 }; i < 3; i++) {
 			if (!t_->Add_Tile("grassTile")) {
+				return false;
+			}
+		}
+		t_->Create_Tile("grass", "notGrass", 0, 0);
+		for (int i{ 0 }; i < 3; i++) {
+			if (!t_->Add_Tile("notGrass")) {
+				return false;
+			}
+		}
+		t_->Create_Tile("grass", "defGrass", 5, 5);
+		for (int i{ 0 }; i < 3; i++) {
+			if (!t_->Add_Tile("defGrass")) {
 				return false;
 			}
 		}
 
 		Unit *a = new Unit();
 		a->Set_Sprite("player", g_);
-		a->Set_Side(Faction::EPlayer);
+		a->Set_Side(0);
 		a->Move_Entity(t_->Find_Tile(Util::Vector2(300, 400)));
 		entityVector_.push_back(a);
 		Unit *b = new Unit();
 		b->Set_Sprite("player", g_);
-		b->Set_Side(Faction::EPlayer);
+		b->Set_Side(1);
 		b->Move_Entity(t_->Find_Tile(Util::Vector2(0, 0)));
 		entityVector_.push_back(b);
 
 		return true;
+	}
+
+	void World::Player_Input(HAPISPACE::HAPI_TMouseData &mouseData, HAPISPACE::HAPI_TKeyboardData &keyboardData)
+	{
+		//HAPI.RenderText(pMouse.x, pMouse.y, HAPI_TColour::WHITE, mPos);
+		if (mouseData.leftButtonDown) {
+			for (int i{ 0 }; i < int(entityVector_.size()); i++) {
+				/**
+				Long if-statemend that checks:
+				If a player clicked on an entity,
+				if that entity is on the same side as the player
+				and if that entity is clickable
+				*/
+				if (entityVector_[i]->Is_Colliding(&playerVector_[currPlayer_]->Get_M_Pos())
+					&& entityVector_[i]->Get_Side() == currPlayer_
+					&& entityVector_[i]->Is_Clickable())
+				{
+					playerVector_[currPlayer_]->Select(i);
+					break;
+				}
+				else {
+					std::cout << "This: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos()) << std::endl;
+					std::cout << "North: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().north << std::endl;
+					std::cout << "South: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().south << std::endl;
+					std::cout << "East: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().east << std::endl;
+					std::cout << "West: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().west << std::endl;
+				}
+				playerVector_[currPlayer_]->Deselect();
+			}
+		}
+		else if (mouseData.rightButtonDown) {
+			int entIndex = playerVector_[currPlayer_]->Get_Selected();
+			if (entIndex != -1) {
+				entityVector_[entIndex]->Move_Entity(t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos()));
+				Check_Collisions(entIndex);
+			}
+		}
 	}
 
 	void World::Run()
@@ -90,6 +139,13 @@ namespace SIM
 			g_->Clear_Screen(0);
 			Update();
 			Render();
+			/**
+			NOTE ON COLLISION CHECKS
+			Due to the nature of a turn based tile game, collisions checks only need to happen
+			when a player moves a unit, as nothing will move unless told to do so by a player.
+			This might have to change once a way of storing a planned path over several turns is
+			added, but in the game's current state this is not necessary.
+			*/
 		}
 	}
 
@@ -100,9 +156,12 @@ namespace SIM
 
 		if (playerVector_[currPlayer_]->Has_Ended()) {
 			// loop through entities owned by this player and reset their turn-by-turn values to default
+
+			//TODO: Reset turn by turn vals, add owned yields to city, etc.
+
+			//If end of playerVector_ has been reached, reset to player 0
 			if (currPlayer_ == (playerVector_.size() - 1)) {
 				currPlayer_ = 0;
-				
 			}
 			else {
 				currPlayer_++;
@@ -115,31 +174,16 @@ namespace SIM
 		t_->Update();
 		//Entity update
 		for (auto p : entityVector_) {
-			p->Update();
+			if (p->Is_Active()) {
+				p->Update();
+			}
 		}
-		Check_Collosions();
 
-		std::string mPos = Util::To_String(playerVector_[currPlayer_]->Get_M_Pos().x) + ", " + Util::To_String(playerVector_[currPlayer_]->Get_M_Pos().y);
+		//std::string mPos = Util::To_String(playerVector_[currPlayer_]->Get_M_Pos().x) + ", " + Util::To_String(playerVector_[currPlayer_]->Get_M_Pos().y);
 
 		//Player input
 		if (playerVector_[currPlayer_]->Has_Clicked()) {
-			HAPI_TMouseData pMouse = playerVector_[currPlayer_]->Get_M_Input();
-			HAPI.RenderText(pMouse.x, pMouse.y, HAPI_TColour::WHITE, mPos);
-			if (pMouse.leftButtonDown) {
-				for (int i{ 0 }; i < int(entityVector_.size()); i++) {
-					if (entityVector_[i]->Is_Colliding(&playerVector_[currPlayer_]->Get_M_Pos())) {
-						playerVector_[currPlayer_]->Select(i);
-						break;
-					}
-					playerVector_[currPlayer_]->Deselect();
-				}
-			}
-			else if (pMouse.rightButtonDown) {
-				int entIndex = playerVector_[currPlayer_]->Get_Selected();
-				if (entIndex != -1) {
-					entityVector_[entIndex]->Move_Entity(t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos()));
-				}
-			}
+			Player_Input(playerVector_[currPlayer_]->Get_M_Input(), playerVector_[currPlayer_]->Get_K_Input());
 		}
 	}
 
@@ -153,15 +197,36 @@ namespace SIM
 		}
 	}
 
-	void World::Check_Collosions()
+	void World::Check_Collisions()
 	{
-		for (size_t i{ 0 }; i < (entityVector_.size() - 1); i++) {
-			for (size_t j{ i }; j < (entityVector_.size() - 1); j++) {
-				if (entityVector_[i]->Is_Colliding(entityVector_[j]->Get_Bounds())) {
+		for (size_t i{ 0 }; i < entityVector_.size(); i++) {
+			if (!entityVector_[i]->Is_Active()) {
+				continue;
+			}
+			for (size_t j{ i + 1 }; j < entityVector_.size(); j++) {
+				if (!entityVector_[j]->Is_Active()) {
+					continue;
+				}
+				if (entityVector_[i]->Is_Colliding(entityVector_[j])) {
 					entityVector_[j]->Set_Active(false);
 					std::cout << "C";
 				}
 			}
 		}
+	}
+
+	bool World::Check_Collisions(int entityIndex)
+	{
+		for (size_t i{ 0 }; i < entityVector_.size(); i++) {
+			if (i == entityIndex) {
+				continue;
+			}
+			if (entityVector_[entityIndex]->Is_Colliding(entityVector_[i])) {
+				//change to damage later
+				entityVector_[i]->Set_Active(false);
+				return true;
+			}
+		}
+		return false;
 	}
 }

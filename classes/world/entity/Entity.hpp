@@ -14,12 +14,6 @@ namespace MAP {
 	class Tile;
 }
 
-enum class Faction {
-	EPlayer,
-	EComp,
-	ENeutral
-};
-
 namespace SIM
 {
 	class Entity
@@ -40,12 +34,12 @@ namespace SIM
 		std::string Get_Sprite() const { return spriteKey_; }
 		bool Is_Active() const { return isActive_; }
 		void Set_Active(bool active);
-		Faction Get_Side() const { return side_; }
-		void Set_Side(Faction side);
+		int Get_Side() const { return side_; }
+		void Set_Side(int playerIndex);
 		Util::Rectangle* Get_Bounds() const { return boundRect_; }
 
 		bool Is_Colliding(const Util::Vector2 *other);
-		bool Is_Colliding(const Util::Rectangle *other);
+		bool Is_Colliding(const Entity *other);
 		bool operator==(Entity &other) const;
 		bool operator!=(Entity &other) const;
 
@@ -53,7 +47,7 @@ namespace SIM
 		std::string spriteKey_;
 		Util::Vector2 pos_;
 		bool isActive_, isClickable_;
-		Faction side_;
+		int side_;
 		MAP::Tile *currTile_;
 		Util::Rectangle *boundRect_;
 	};
