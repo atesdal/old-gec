@@ -1,5 +1,6 @@
 #include "Entity.hpp"
 #include "..\..\graphics\Graphics.hpp"
+#include "..\map\Tile.hpp"
 #include "..\..\utils\Camera.hpp"
 #include "..\..\utils\Rectangle.hpp"
 #include <cassert>
@@ -23,6 +24,12 @@ namespace SIM
 		float camY = pos_.y + float(pCamera->Get_Y());
 		Util::Vector2 renderPos(camX, camY);
 		gfx->Draw_Sprite(spriteKey_, renderPos);
+	}
+
+	void Entity::Set_Pos(MAP::Tile *newPos)
+	{
+		currTile_ = newPos;
+		pos_ = currTile_->Get_Pos();
 	}
 
 	void Entity::Set_Sprite(std::string newSprite, GFX::Graphics *gfx)

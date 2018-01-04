@@ -2,6 +2,7 @@
 
 #include "..\..\utils\Vector2.hpp"
 #include <string>
+#include <vector>
 
 namespace GFX {
 	class Graphics;
@@ -25,7 +26,9 @@ namespace SIM
 		//Virtuals
 		virtual void Update() = 0;
 		virtual void Render(GFX::Graphics *gfx, Util::Camera *pCamera) const;
-		virtual void Move_Entity(MAP::Tile *newPos) = 0;
+		virtual void Move_Entity(std::vector<MAP::Tile*> path) = 0;
+		virtual void Set_Pos(MAP::Tile *newPos);
+		virtual void Reset() = 0;
 
 		//Base entity functions
 		Util::Vector2 Get_Pos() const { return pos_; }
@@ -37,6 +40,7 @@ namespace SIM
 		int Get_Side() const { return side_; }
 		void Set_Side(int playerIndex);
 		Util::Rectangle* Get_Bounds() const { return boundRect_; }
+		MAP::Tile* Get_Tile() const { return currTile_; }
 
 		bool Is_Colliding(const Util::Vector2 *other);
 		bool Is_Colliding(const Entity *other);

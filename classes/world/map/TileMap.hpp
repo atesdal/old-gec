@@ -35,7 +35,10 @@ namespace MAP {
 		bool Create_Resource(std::string resKey, std::string spriteKey, int foodBonus, int prodBonus, int harvestFoodYield, int harvestProdYield);
 		//Returns pointer to the tile at given position, if doesn't exist returns nullptr
 		Tile* Find_Tile(Util::Vector2 pos) const;
+		std::vector<Tile*> Find_Path(Tile *start, Tile *end);
 	private:
+		void Fill_Path(Tile *target, std::vector<Tile*> &pathVector);
+
 		const int mapWidth_, mapHeight_, tileSize_, screenWidth_, screenHeight_;
 		//Holds active Tile pointers
 		std::vector<MAP::Tile*> tileVector_;

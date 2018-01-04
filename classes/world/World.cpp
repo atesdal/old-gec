@@ -85,59 +85,28 @@ namespace SIM
 		Unit *a = new Unit();
 		a->Set_Sprite("player", g_);
 		a->Set_Side(0);
-		a->Move_Entity(t_->Find_Tile(Util::Vector2(300, 400)));
+		a->Set_Pos(t_->Find_Tile(Util::Vector2(300, 400)));
 		entityVector_.push_back(a);
 		Unit *b = new Unit();
 		b->Set_Sprite("player", g_);
 		b->Set_Side(1);
-		b->Move_Entity(t_->Find_Tile(Util::Vector2(0, 0)));
+		b->Set_Pos(t_->Find_Tile(Util::Vector2(0, 0)));
 		entityVector_.push_back(b);
 
 		return true;
 	}
 
-	void World::Player_Input(HAPISPACE::HAPI_TMouseData &mouseData, HAPISPACE::HAPI_TKeyboardData &keyboardData)
-	{
-		//HAPI.RenderText(pMouse.x, pMouse.y, HAPI_TColour::WHITE, mPos);
-		if (mouseData.leftButtonDown) {
-			for (int i{ 0 }; i < int(entityVector_.size()); i++) {
-				/**
-				Long if-statemend that checks:
-				If a player clicked on an entity,
-				if that entity is on the same side as the player
-				and if that entity is clickable
-				*/
-				if (entityVector_[i]->Is_Colliding(&playerVector_[currPlayer_]->Get_M_Pos())
-					&& entityVector_[i]->Get_Side() == currPlayer_
-					&& entityVector_[i]->Is_Clickable())
-				{
-					playerVector_[currPlayer_]->Select(i);
-					break;
-				}
-				else {
-					std::cout << "This: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos()) << std::endl;
-					std::cout << "North: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().north << std::endl;
-					std::cout << "South: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().south << std::endl;
-					std::cout << "East: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().east << std::endl;
-					std::cout << "West: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().west << std::endl;
-				}
-				playerVector_[currPlayer_]->Deselect();
-			}
-		}
-		else if (mouseData.rightButtonDown) {
-			int entIndex = playerVector_[currPlayer_]->Get_Selected();
-			if (entIndex != -1) {
-				entityVector_[entIndex]->Move_Entity(t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos()));
-				Check_Collisions(entIndex);
-			}
-		}
-	}
-
 	void World::Run()
 	{
+		constexpr DWORD kTimeDelay{ 100 };
+		DWORD lastUpdate{ HAPI.GetTime() };
+
 		while (HAPI.Update()) {
 			g_->Clear_Screen(0);
-			Update();
+			if (HAPI.GetTime() - lastUpdate >= kTimeDelay) {
+				Update();
+				lastUpdate = HAPI.GetTime();
+			}
 			Render();
 			/**
 			NOTE ON COLLISION CHECKS
@@ -153,12 +122,13 @@ namespace SIM
 	{
 		//Player update
 		playerVector_[currPlayer_]->Update();
-
 		if (playerVector_[currPlayer_]->Has_Ended()) {
-			// loop through entities owned by this player and reset their turn-by-turn values to default
-
 			//TODO: Reset turn by turn vals, add owned yields to city, etc.
-
+			for (auto p : entityVector_) {
+				if (p->Get_Side() == currPlayer_) {
+					p->Reset();
+				}
+			}
 			//If end of playerVector_ has been reached, reset to player 0
 			if (currPlayer_ == (playerVector_.size() - 1)) {
 				currPlayer_ = 0;
@@ -168,6 +138,7 @@ namespace SIM
 			}
 			std::cout << "Current player is: " << currPlayer_ << std::endl;
 		}
+
 		//Camera update
 		c_->Update();
 		//TileMap update
@@ -178,8 +149,6 @@ namespace SIM
 				p->Update();
 			}
 		}
-
-		//std::string mPos = Util::To_String(playerVector_[currPlayer_]->Get_M_Pos().x) + ", " + Util::To_String(playerVector_[currPlayer_]->Get_M_Pos().y);
 
 		//Player input
 		if (playerVector_[currPlayer_]->Has_Clicked()) {
@@ -195,6 +164,66 @@ namespace SIM
 				p->Render(g_, c_);
 			}
 		}
+	}
+
+	void World::Player_Input(HAPISPACE::HAPI_TMouseData mouseData, HAPISPACE::HAPI_TKeyboardData keyboardData)
+	{
+		if (mouseData.leftButtonDown) {
+			HAPI.RenderText(mouseData.x, mouseData.y, HAPI_TColour::WHITE, "asd");
+			
+			//Selects/deselects entites based on mouse position when clicking
+			playerVector_[currPlayer_]->Select(EntityClick(mouseData.x, mouseData.y));
+
+			//If nothing is selected
+			if(playerVector_[currPlayer_]->Get_Selected() == -1) {
+				std::vector<MAP::Tile*> tpath;
+				tpath = t_->Find_Path(t_->Find_Tile(Util::Vector2(0, 0)), t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos()));
+				for (auto p : tpath) {
+					std::cout << p->Get_Pos() << std::endl;
+				}
+
+				//std::vector<MAP::Tile*> bound = t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds();
+				//std::cout << "This: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos()) << std::endl;
+				//std::cout << "North: " << bound[MAP::Tile::DIR::NORTH] << std::endl;
+				//std::cout << "South: " << bound[MAP::Tile::DIR::SOUTH] << std::endl;
+				//std::cout << "East: " << bound[MAP::Tile::DIR::EAST] << std::endl;
+				//std::cout << "West: " << bound[MAP::Tile::DIR::WEST] << std::endl;
+
+				//std::cout << "This: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos()) << std::endl;
+				//std::cout << "North: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().north << std::endl;
+				//std::cout << "South: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().south << std::endl;
+				//std::cout << "East: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().east << std::endl;
+				//std::cout << "West: " << t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos())->Get_Bounds().west << std::endl;
+			}
+		}
+		else if (mouseData.rightButtonDown) {
+			int entIndex = playerVector_[currPlayer_]->Get_Selected();
+			if (entIndex != -1) {
+				std::vector<MAP::Tile*> tpath = 
+					t_->Find_Path(entityVector_[entIndex]->Get_Tile(), t_->Find_Tile(playerVector_[currPlayer_]->Get_M_Pos()));
+				entityVector_[entIndex]->Move_Entity(tpath);
+				Check_Collisions(entIndex);
+			}
+		}
+	}
+
+	int World::EntityClick(int mX, int mY)
+	{
+		for (int i{ 0 }; i < int(entityVector_.size()); i++) {
+			/**
+			Long if-statemend that checks:
+			If a player clicked on an entity,
+			if that entity is on the same side as the player
+			and if that entity is clickable
+			*/
+			if (entityVector_[i]->Is_Colliding(&playerVector_[currPlayer_]->Get_M_Pos())
+				&& entityVector_[i]->Get_Side() == currPlayer_
+				&& entityVector_[i]->Is_Clickable())
+			{
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	void World::Check_Collisions()

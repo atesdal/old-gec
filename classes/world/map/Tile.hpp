@@ -2,6 +2,7 @@
 
 #include "..\..\utils\Vector2.hpp"
 #include <string>
+#include <vector>
 
 namespace GFX {
 	class Graphics;
@@ -21,11 +22,11 @@ namespace MAP
 		Tile(std::string spriteKey, int foodYield, int prodYield);
 		~Tile();
 
-		struct Boundaries {
-			Tile* north = nullptr;
-			Tile* south = nullptr;
-			Tile* east = nullptr;
-			Tile* west = nullptr;
+		enum DIR {
+			NORTH,
+			EAST,
+			SOUTH,
+			WEST
 		};
 
 		void Update();
@@ -39,16 +40,24 @@ namespace MAP
 		bool Delete_Resource();
 		int Get_F_Yield() const { return food_; }
 		int Get_P_Yield() const { return prod_; }
-		void Set_Bounds(Boundaries newBounds) { tileBounds_ = newBounds; }
-		Boundaries Get_Bounds() const { return tileBounds_; }
+		void Set_Bounds(DIR dir, Tile *bound) { boundVec_[dir] = bound; }
+		std::vector<Tile*> Get_Bounds() const { return boundVec_; }
+		//void Set_Bounds(Boundaries newBounds) { tileBounds_ = newBounds; }
+		//Boundaries Get_Bounds() const { return tileBounds_; }
+		bool Has_Visited() const { return visited_; }
+		void Set_Visited(bool status) { visited_ = status; }
+		void Set_Previous(Tile* prev) { cameFrom_ = prev; }
+		Tile* Get_Prev() const { return cameFrom_; }
 
 	private:
 		std::string spriteKey_;
 		Util::Vector2 pos_;
 		int food_, prod_;
-		bool isImproved_;
+		bool isImproved_, visited_;
 		Feature *feature_;
 		Resource *resource_;
-		Boundaries tileBounds_;
+		//0 = north, 1 = east, 2 = south, 3 = west
+		std::vector<Tile*> boundVec_;
+		Tile* cameFrom_;
 	};
 }

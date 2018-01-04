@@ -3,6 +3,8 @@
 #include "Feature.hpp"
 #include "Resource.hpp"
 #include "..\..\utils\Camera.hpp"
+#include <queue>
+#include <iostream>
 
 namespace MAP
 {
@@ -74,20 +76,15 @@ namespace MAP
 			if (tileVector_.size() != 0) {
 				//Temporary vector to perform calculations
 				Util::Vector2 tilePos;
-				//Boundaries struct to be passed to new tile
-				Tile::Boundaries newBounds;
 				//Checks if tile has to be placed on a new row, ensures final tileVector_ conforms to mapWidth_ and mapHeight_
 				if (tileVector_.size() % mapWidth_ == 0) {//New row
-					Tile::Boundaries oldBounds;
 					//Check when cast occurs to avoid float division if possible
 					tilePos = Util::Vector2(0.0f, (float(tileVector_.size() / mapHeight_)) * tileSize_);
 					int northIndex = tileVector_.size() - mapWidth_;
 					//Set north boundary for new tile
-					newBounds.north = tileVector_[northIndex];
+					newTile->Set_Bounds(Tile::DIR::NORTH, tileVector_[northIndex]);
 					//Update south boundary for north tile to reflect new tile
-					oldBounds = tileVector_[northIndex]->Get_Bounds();
-					oldBounds.south = newTile;
-					tileVector_[northIndex]->Set_Bounds(oldBounds);
+					tileVector_[northIndex]->Set_Bounds(Tile::DIR::SOUTH, newTile);
 				}
 				else {//Positioned directly to the right
 					Util::Vector2 prevPos = tileVector_[tileVector_.size() - 1]->Get_Pos();
@@ -95,33 +92,23 @@ namespace MAP
 					if (tileVector_.size() > mapWidth_) {//If multiple rows exist in tileVector_
 						//Set boundaries for new tile
 						int westIndex = tileVector_.size() - 1;
-						newBounds.west = tileVector_[westIndex];
+						newTile->Set_Bounds(Tile::DIR::WEST, tileVector_[westIndex]);
 						int northIndex = tileVector_.size() - mapWidth_;
-						newBounds.north = tileVector_[northIndex];
+						newTile->Set_Bounds(Tile::DIR::NORTH, tileVector_[northIndex]);
 						//Update east boundary for western tile to reflect new tile
-						Tile::Boundaries westBounds;
-						westBounds = tileVector_[westIndex]->Get_Bounds();
-						westBounds.east = newTile;
-						tileVector_[westIndex]->Set_Bounds(westBounds);
+						tileVector_[westIndex]->Set_Bounds(Tile::DIR::EAST, newTile);
 						//Same as above for northern tile
-						Tile::Boundaries northBounds;
-						northBounds = tileVector_[northIndex]->Get_Bounds();
-						northBounds.south = newTile;
-						tileVector_[northIndex]->Set_Bounds(northBounds);
+						tileVector_[northIndex]->Set_Bounds(Tile::DIR::SOUTH, newTile);
 					}
 					else {//If this is the first row in tileVector_
 						//Set boundaries for new tile
 						int westIndex = tileVector_.size() - 1;
-						newBounds.west = tileVector_[westIndex];
+						newTile->Set_Bounds(Tile::DIR::WEST, tileVector_[westIndex]);
 						//Update east boundary for western tile to reflect new tile
-						Tile::Boundaries westBounds;
-						westBounds = tileVector_[westIndex]->Get_Bounds();
-						westBounds.east = newTile;
-						tileVector_[westIndex]->Set_Bounds(westBounds);
+						tileVector_[westIndex]->Set_Bounds(Tile::DIR::EAST, newTile);
 					}
 				}
 				newTile->Set_Pos(tilePos);
-				newTile->Set_Bounds(newBounds);
 			}
 			else {
 				newTile->Set_Pos(Util::Vector2(0, 0));
@@ -172,5 +159,50 @@ namespace MAP
 		int vectorIndex = modX + (modY * mapWidth_);
 
 		return tileVector_[vectorIndex];
+	}
+
+	std::vector<Tile*> TileMap::Find_Path(Tile *start, Tile *end)
+	{
+		std::vector<Tile*> path, bounds;
+		std::queue<Tile*> frontier;
+		Tile* current = nullptr;
+
+		frontier.push(start);
+		
+		while (!frontier.empty()) {
+			current = frontier.front();
+			frontier.pop();
+			current->Set_Visited(true);
+
+			bounds = current->Get_Bounds();
+			for (auto p : bounds) {
+				if (p != nullptr && !p->Has_Visited()) {
+					frontier.push(p);
+					p->Set_Visited(true);
+					p->Set_Previous(current);
+					if (p == end) {
+						Fill_Path(p, path);
+						while (!frontier.empty()) {
+							frontier.pop();
+						}
+						break;
+					}
+				}
+			}
+		}
+		for (auto p : tileVector_) {
+			p->Set_Previous(nullptr);
+			p->Set_Visited(false);
+		}
+		return path;
+	}
+
+	void TileMap::Fill_Path(Tile *target, std::vector<Tile*> &pathVector)
+	{
+		Tile* current = target;
+		while (current->Get_Prev() != nullptr) {
+			pathVector.push_back(current);
+			current = current->Get_Prev();
+		}
 	}
 }

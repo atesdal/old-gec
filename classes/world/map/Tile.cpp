@@ -8,12 +8,11 @@
 namespace MAP
 {
 	Tile::Tile(std::string spriteKey, int foodYield, int prodYield) :
-		spriteKey_(spriteKey), food_(foodYield), prod_(prodYield), isImproved_(false), feature_(nullptr), resource_(nullptr)
+		spriteKey_(spriteKey), food_(foodYield), prod_(prodYield), isImproved_(false), visited_(false), feature_(nullptr), resource_(nullptr)
 	{
-		tileBounds_.north = nullptr;
-		tileBounds_.south = nullptr;
-		tileBounds_.east = nullptr;
-		tileBounds_.west = nullptr;
+		for (int i{ 0 }; i < 4; i++) {
+			boundVec_.push_back(nullptr);
+		}
 	}
 
 

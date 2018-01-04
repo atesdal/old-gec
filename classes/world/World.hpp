@@ -32,10 +32,11 @@ namespace SIM
 		void Run();
 
 	private:
+		bool LoadLevel();
 		void Update();
 		void Render();
-		bool LoadLevel();
-		void Player_Input(HAPISPACE::HAPI_TMouseData &mouseData, HAPISPACE::HAPI_TKeyboardData &keyboardData);
+		void Player_Input(HAPISPACE::HAPI_TMouseData mouseData, HAPISPACE::HAPI_TKeyboardData keyboardData);
+		int EntityClick(int mX, int mY);
 		void Check_Collisions();
 		bool Check_Collisions(int entityIndex);
 

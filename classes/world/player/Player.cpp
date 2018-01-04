@@ -6,7 +6,7 @@ namespace SIM
 {
 	Player::Player() :
 		camPos_(Util::Vector2(0, 0)), worldMPos_(Util::Vector2(0, 0)),
-		mData(HAPI.GetMouseData()), kData(HAPI.GetKeyboardData()), hasClicked_(false), endedTurn_(false), selectedEntIndex_(-1)
+		hasClicked_(false), endedTurn_(false), selectedEntIndex_(-1)
 	{
 
 	}
@@ -20,6 +20,9 @@ namespace SIM
 	{
 		hasClicked_ = false;
 		endedTurn_ = false;
+
+		mData = HAPI.GetMouseData();
+		kData = HAPI.GetKeyboardData();
 
 		if (mData.leftButtonDown) {
 			Convert_M_To_World();
